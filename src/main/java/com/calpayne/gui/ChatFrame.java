@@ -1,5 +1,6 @@
 package com.calpayne.gui;
 
+import com.calpayne.message.Message;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,6 +21,8 @@ import javax.swing.JTextPane;
  */
 public class ChatFrame extends JFrame {
 
+    private JTextPane messages;
+
     public ChatFrame(String title) {
         super(title);
         JPanel container = new JPanel();
@@ -31,30 +34,28 @@ public class ChatFrame extends JFrame {
         JTextField input = new JTextField(30);
         input.setBorder(BorderFactory.createCompoundBorder(input.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 
-        JButton sendBtn = new JButton("Send Msg");
-        sendBtn.addActionListener((ActionEvent ae) -> {
-            System.out.println("Send: " + input.getText());
-            input.setText("");
-        });
-
-        JTextPane messages = new JTextPane();
+        messages = new JTextPane();
         messages.setContentType("text/html");
         messages.setText("<html><style type=\"text/css\">\n"
-                + ".nm1 {padding: 10px;margin-top: 5px;color: #0c5460;background-color: #d1ecf1;border: 1px solid #bee5eb;}\n"
-                + ".nm2 {padding: 10px;margin-top: 5px;color: #004085; background-color: #cce5ff; border: 1px solid #b8daff;}\n"
+                + ".nm {padding: 10px;margin-top: 5px;color: #004085; background-color: #cce5ff; border: 1px solid #b8daff;}\n"
                 + ".sm {padding: 10px;margin-top: 5px;color: #856404;background-color: #fff3cd;border: 1px solid #ffeeba;}\n"
                 + "</style>\n"
                 + "<div class=\"sm\"><b>Server:</b> Welcome to the chat! Type <b>/help</b> for help</div>\n"
-                + "<div class=\"nm1\"><b>Callum:</b> Hello everyone</div>\n"
-                + "<div class=\"nm2\"><b>Callum2:</b> Hello Callum</div>\n"
                 + "</html>");
         messages.setEditable(false);
         messages.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 
-        JLabel clients = new JLabel("<html><style type=\"text/css\">p {font-weight: 300;}</style><b>Who's Online</b><br /><br /><p>Calp</p></html>");
+        JLabel clients = new JLabel("<html><style type=\"text/css\">p {font-weight: 300;}</style><b>Who's Online</b><br /><br /><p>Callum</p></html>");
         clients.setVerticalAlignment(JLabel.TOP);
         clients.setVerticalTextPosition(JLabel.TOP);
         clients.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+
+        JButton sendBtn = new JButton("Send Msg");
+        sendBtn.addActionListener((ActionEvent ae) -> {
+            Message message = new Message("Callum", input.getText());
+            addMessageToView(message);
+            input.setText("");
+        });
 
         GridBagConstraints left = new GridBagConstraints();
         left.anchor = GridBagConstraints.LINE_START;
@@ -85,6 +86,15 @@ public class ChatFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setAlwaysOnTop(true);
+    }
+
+    public void addMessageToView(Message message) {
+        String current = messages.getText();
+        current = current.substring(0, current.indexOf("</body>"));
+        current += message.toString() + "</body></html>";
+
+        messages.setText(current);
+
     }
 
 }
