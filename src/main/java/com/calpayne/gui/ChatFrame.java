@@ -21,9 +21,10 @@ import javax.swing.JTextPane;
  */
 public class ChatFrame extends JFrame {
 
-    private JTextPane messages;
+    private static ChatFrame CHAT_FRAME;
+    private final JTextPane messages;
 
-    public ChatFrame(String title) {
+    private ChatFrame(String title) {
         super(title);
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
@@ -78,6 +79,14 @@ public class ChatFrame extends JFrame {
         container.add(new JScrollPane(clients), BorderLayout.EAST);
 
         this.add(container);
+    }
+
+    public static ChatFrame getChatFrame() {
+        if (CHAT_FRAME == null) {
+            CHAT_FRAME = new ChatFrame("Socket Chat");
+        }
+
+        return CHAT_FRAME;
     }
 
     public void start() {
