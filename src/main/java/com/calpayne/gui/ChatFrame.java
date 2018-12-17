@@ -39,7 +39,15 @@ public class ChatFrame extends JFrame {
 
         JTextPane messages = new JTextPane();
         messages.setContentType("text/html");
-        messages.setText("<html>Welcome to the chat!<br/>Type <b>/help</b> for help</html>");
+        messages.setText("<html><style type=\"text/css\">\n"
+                + ".nm1 {padding: 10px;margin-top: 5px;color: #0c5460;background-color: #d1ecf1;border: 1px solid #bee5eb;}\n"
+                + ".nm2 {padding: 10px;margin-top: 5px;color: #004085; background-color: #cce5ff; border: 1px solid #b8daff;}\n"
+                + ".sm {padding: 10px;margin-top: 5px;color: #856404;background-color: #fff3cd;border: 1px solid #ffeeba;}\n"
+                + "</style>\n"
+                + "<div class=\"sm\"><b>Server:</b> Welcome to the chat! Type <b>/help</b> for help</div>\n"
+                + "<div class=\"nm1\"><b>Callum:</b> Hello everyone</div>\n"
+                + "<div class=\"nm2\"><b>Callum2:</b> Hello Callum</div>\n"
+                + "</html>");
         messages.setEditable(false);
         messages.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 
@@ -73,7 +81,7 @@ public class ChatFrame extends JFrame {
 
     public void start() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500, 300);
+        this.setSize(700, 500);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setAlwaysOnTop(true);
