@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 /**
  *
@@ -37,9 +37,10 @@ public class ChatFrame extends JFrame {
             input.setText("");
         });
 
-        JTextArea messages = new JTextArea("Welcome to the chat!\nType /help for help");
+        JTextPane messages = new JTextPane();
+        messages.setContentType("text/html");
+        messages.setText("<html>Welcome to the chat!<br/>Type <b>/help</b> for help</html>");
         messages.setEditable(false);
-        messages.setLineWrap(true);
         messages.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 
         JLabel clients = new JLabel("<html><style type=\"text/css\">p {font-weight: 300;}</style><b>Who's Online</b><br /><br /><p>Calp</p></html>");
@@ -69,7 +70,7 @@ public class ChatFrame extends JFrame {
 
         this.add(container);
     }
-    
+
     public void start() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(500, 300);
