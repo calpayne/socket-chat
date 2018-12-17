@@ -46,7 +46,7 @@ public class ChatFrame extends JFrame {
         messages.setEditable(false);
         messages.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 
-        JLabel clients = new JLabel("<html><style type=\"text/css\">p {font-weight: 300;}</style><b>Who's Online</b><br /><br /><p>Callum</p></html>");
+        JLabel clients = new JLabel("<html><style type=\"text/css\">p {margin-top: 2px;font-weight: 300;} p b {color: #856404;}</style><b>Who's Online</b><br /><br /><p><img src=\"file:star.png\"><b>Callum</b></p><p>Glenn</p></html>");
         clients.setVerticalAlignment(JLabel.TOP);
         clients.setVerticalTextPosition(JLabel.TOP);
         clients.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
