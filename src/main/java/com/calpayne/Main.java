@@ -3,7 +3,12 @@ package com.calpayne;
 import com.calpayne.gui.ChatPanel;
 import javax.swing.JFrame;
 
+/**
+ *
+ * @author Cal Payne
+ */
 public class Main {
+
     /**
      * @param args the command line arguments
      */

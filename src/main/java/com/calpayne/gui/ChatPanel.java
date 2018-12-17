@@ -2,12 +2,10 @@ package com.calpayne.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,7 +24,7 @@ public class ChatPanel extends JFrame {
         super(title);
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
-        
+
         JPanel container2 = new JPanel();
         container2.setBackground(Color.WHITE);
         container2.setLayout(new GridBagLayout());
