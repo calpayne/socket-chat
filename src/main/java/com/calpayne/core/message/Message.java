@@ -50,7 +50,7 @@ public class Message {
      */
     @Override
     public String toString() {
-        return "<div class=\"" + type.getTypeClass() + "\"><b>" + from + ":</b> " + message + "</div>\n";
+        return Messages.addEmojis("<div class=\"" + type.getTypeClass() + "\"><b>" + from + ":</b> " + message + "</div>\n");
     }
 
     /**

@@ -20,4 +20,8 @@ public abstract class Messages {
 
         return gson.fromJson(json, Message.class);
     }
+    
+    public static String addEmojis(String message) {
+        return message.replaceAll(":star:", "<img src=\"file:star.png\">");
+    }
 }

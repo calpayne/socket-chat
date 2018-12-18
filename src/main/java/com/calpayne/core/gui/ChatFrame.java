@@ -125,7 +125,6 @@ public class ChatFrame extends JFrame {
         String current = messages.getText();
         current = current.substring(0, current.indexOf("</body>"));
         current += message.toString() + "</body></html>";
-
         messages.setText(current);
     }
 
