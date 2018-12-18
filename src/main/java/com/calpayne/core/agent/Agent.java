@@ -16,16 +16,13 @@ public abstract class Agent {
     protected final ChatFrame chatFrame;
     protected final Settings settings;
     private MessageHandler handler;
-    protected final Object queueLock = new Object();
     private final BlockingQueue<Message> messages = new LinkedBlockingDeque<>();
 
     private final Thread handleMessages = new Thread(() -> {
         while (true) {
             try {
-                synchronized (queueLock) {
-                    Message newMessage = messages.take();
-                    handler.handleMessage(this, newMessage);
-                }
+                Message newMessage = messages.take();
+                handler.handleMessage(this, newMessage);
             } catch (InterruptedException ex) {
 
             }

@@ -60,12 +60,9 @@ public class Server extends Agent {
     });
 
     public Server(Settings settings) {
-        super(settings, new MessageHandler() {
-            @Override
-            public void handleMessage(Agent agent, Message message) {
-                System.out.println(message);
-                agent.addMessageToView(message);
-            }
+        super(settings, (Agent agent, Message message) -> {
+            System.out.println(message);
+            agent.addMessageToView(message);
         });
         super.startUp();
     }
