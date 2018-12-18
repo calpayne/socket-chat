@@ -19,6 +19,14 @@ public class Message {
         this.from = from;
         this.message = message;
     }
+    
+    public String getFrom() {
+        return from;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
 
     @Override
     public String toString() {

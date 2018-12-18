@@ -1,5 +1,6 @@
 package com.calpayne.gui;
 
+import com.calpayne.core.agent.Agent;
 import com.calpayne.message.Message;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -22,6 +23,7 @@ import javax.swing.JTextPane;
 public class ChatFrame extends JFrame {
 
     private static ChatFrame CHAT_FRAME;
+    private Agent agent;
     private final JTextPane messages;
 
     private ChatFrame(String title) {
@@ -53,9 +55,12 @@ public class ChatFrame extends JFrame {
 
         JButton sendBtn = new JButton("Send Msg");
         sendBtn.addActionListener((ActionEvent ae) -> {
-            Message message = new Message("Callum", input.getText());
-            addMessageToView(message);
-            input.setText("");
+            if (agent != null) {
+                Message message = new Message(agent.getHandle(), input.getText());
+                agent.sendMessage(message);
+                addMessageToView(message);
+                input.setText("");
+            }
         });
 
         GridBagConstraints left = new GridBagConstraints();
@@ -79,6 +84,10 @@ public class ChatFrame extends JFrame {
         container.add(new JScrollPane(clients), BorderLayout.EAST);
 
         this.add(container);
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
     public static ChatFrame getChatFrame() {

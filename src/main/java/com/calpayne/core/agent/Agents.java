@@ -9,10 +9,12 @@ import com.calpayne.core.Settings;
 public abstract class Agents {
 
     public static Agent createNew(Settings settings) {
-        Agent agent = new Client(settings);
+        Agent agent;
 
         if (settings.getServerIP().equalsIgnoreCase("0.0.0.0")) {
             agent = new Server(settings);
+        } else {
+            agent = new Client(settings);
         }
 
         return agent;
