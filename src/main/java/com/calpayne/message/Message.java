@@ -1,5 +1,7 @@
 package com.calpayne.message;
 
+import com.google.gson.Gson;
+
 /**
  *
  * @author Cal Payne
@@ -19,11 +21,11 @@ public class Message {
         this.from = from;
         this.message = message;
     }
-    
+
     public String getFrom() {
         return from;
     }
-    
+
     public String getMessage() {
         return message;
     }
@@ -34,7 +36,8 @@ public class Message {
     }
 
     public String toJSON() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 
 }
