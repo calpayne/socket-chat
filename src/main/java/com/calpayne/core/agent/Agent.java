@@ -1,9 +1,9 @@
 package com.calpayne.core.agent;
 
 import com.calpayne.core.Settings;
-import com.calpayne.gui.ChatFrame;
-import com.calpayne.message.Message;
-import com.calpayne.message.handler.MessageHandler;
+import com.calpayne.core.gui.ChatFrame;
+import com.calpayne.core.message.Message;
+import com.calpayne.core.message.handler.MessageHandler;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -29,6 +29,10 @@ public abstract class Agent {
         }
     });
 
+    /**
+     * @param settings the settings to use
+     * @param handler the handler to use
+     */
     public Agent(Settings settings, MessageHandler handler) {
         this.settings = settings;
         this.handler = handler;
@@ -36,32 +40,56 @@ public abstract class Agent {
         chatFrame.setAgent(this);
     }
 
-    public final void startUp() {
-        if (startUpSteps()) {
-            startUpThreads();
-            handleMessages.start();
-            chatFrame.start();
-        }
+    /**
+     * Startup the Agent
+     */
+    public final void startup() {
+        startupSteps();
+        startupThreads();
+        handleMessages.start();
+        chatFrame.start();
     }
 
-    protected abstract boolean startUpSteps();
+    /**
+     * Additional startup steps
+     */
+    protected abstract void startupSteps();
 
-    protected abstract void startUpThreads();
+    /**
+     * Startup threads
+     */
+    protected abstract void startupThreads();
 
+    /**
+     * @param handler the handler to set
+     */
     public void setMessageHandler(MessageHandler handler) {
         this.handler = handler;
     }
 
+    /**
+     * @param message the message to queue
+     * @throws java.lang.InterruptedException
+     */
     protected void queueMessage(Message message) throws InterruptedException {
         messages.put(message);
     }
 
+    /**
+     * @param message the message to send
+     */
     public abstract void sendMessage(Message message);
 
+    /**
+     * @return the handle
+     */
     public String getHandle() {
         return settings.getHandle();
     }
-    
+
+    /**
+     * @param message the message to add to the view
+     */
     public synchronized void addMessageToView(Message message) {
         chatFrame.addMessageToView(message);
     }

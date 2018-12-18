@@ -1,7 +1,7 @@
-package com.calpayne.gui;
+package com.calpayne.core.gui;
 
 import com.calpayne.core.agent.Agent;
-import com.calpayne.message.Message;
+import com.calpayne.core.message.Message;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -26,6 +26,9 @@ public class ChatFrame extends JFrame {
     private Agent agent;
     private final JTextPane messages;
 
+    /**
+     * @param title the title to use
+     */
     private ChatFrame(String title) {
         super(title);
         JPanel container = new JPanel();
@@ -86,10 +89,16 @@ public class ChatFrame extends JFrame {
         this.add(container);
     }
 
+    /**
+     * @param agent the agent to set
+     */
     public void setAgent(Agent agent) {
         this.agent = agent;
     }
 
+    /**
+     * @return the ChatFrame instance
+     */
     public static ChatFrame getChatFrame() {
         if (CHAT_FRAME == null) {
             CHAT_FRAME = new ChatFrame("Socket Chat");
@@ -98,6 +107,9 @@ public class ChatFrame extends JFrame {
         return CHAT_FRAME;
     }
 
+    /**
+     * Show the frame
+     */
     public void start() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(700, 500);
@@ -106,6 +118,9 @@ public class ChatFrame extends JFrame {
         this.setAlwaysOnTop(true);
     }
 
+    /**
+     * @param message add a message to the view
+     */
     public synchronized void addMessageToView(Message message) {
         String current = messages.getText();
         current = current.substring(0, current.indexOf("</body>"));

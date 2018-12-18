@@ -1,4 +1,4 @@
-package com.calpayne.message;
+package com.calpayne.core.message;
 
 /**
  *
@@ -11,10 +11,16 @@ public enum MessageType {
 
     private final String typeClass;
 
+    /**
+     * @param typeClass the CSS class for the message type
+     */
     private MessageType(String typeClass) {
         this.typeClass = typeClass;
     }
 
+    /**
+     * @return the type class
+     */
     public String getTypeClass() {
         return typeClass;
     }

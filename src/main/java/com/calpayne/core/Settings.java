@@ -23,18 +23,30 @@ public class Settings {
     private int serverPort = 9090;
     public static int GLOBAL_TIMEOUT_TIME = 120;
 
+    /**
+     * @return the handle
+     */
     public String getHandle() {
         return handle;
     }
 
+    /**
+     * @return the server IP
+     */
     public String getServerIP() {
         return serverIP;
     }
 
+    /**
+     * @return the server port
+     */
     public int getServerPort() {
         return serverPort;
     }
 
+    /**
+     * Create the config if it doesn't exist and read from it if it does
+     */
     public void config() {
         File config = new File("config.json");
         if (!config.exists()) {
@@ -44,6 +56,9 @@ public class Settings {
         }
     }
 
+    /**
+     * @param config the config file to read
+     */
     private void readConfig(File config) {
         Settings settings = null;
         GsonBuilder builder = new GsonBuilder();
@@ -67,6 +82,9 @@ public class Settings {
         }
     }
 
+    /**
+     * @param config the config file to create
+     */
     private void createConfig(File config) {
         Gson gson = new Gson();
 

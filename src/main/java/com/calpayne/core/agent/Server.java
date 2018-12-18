@@ -2,9 +2,9 @@ package com.calpayne.core.agent;
 
 import com.calpayne.core.Connection;
 import com.calpayne.core.Settings;
-import com.calpayne.message.Message;
-import com.calpayne.message.MessageType;
-import com.calpayne.message.Messages;
+import com.calpayne.core.message.Message;
+import com.calpayne.core.message.MessageType;
+import com.calpayne.core.message.Messages;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -46,7 +46,6 @@ public class Server extends Agent {
                         try {
                             if (connection.hasMessage()) {
                                 String message = connection.receiveMessage();
-                                System.out.println(message);
                                 queueMessage(Messages.fromJSON(message));
                             }
                         } catch (InterruptedException | IOException | ClassNotFoundException ex) {
@@ -58,32 +57,41 @@ public class Server extends Agent {
         }
     });
 
+    /**
+     * @param settings the settings to use
+     */
     public Server(Settings settings) {
         super(settings, (Agent agent, Message message) -> {
-            System.out.println(message);
             agent.sendMessage(message);
         });
-        super.startUp();
+        super.startup();
     }
 
+    /**
+     * Additional startup steps
+     */
     @Override
-    protected boolean startUpSteps() {
+    protected void startupSteps() {
         try {
             InetAddress bindAddress = InetAddress.getByName(settings.getServerIP());
             serverSocket = new ServerSocket(settings.getServerPort(), 0, bindAddress);
         } catch (IOException ex) {
-            return false;
-        }
 
-        return true;
+        }
     }
 
+    /**
+     * Startup threads
+     */
     @Override
-    protected void startUpThreads() {
+    protected void startupThreads() {
         acceptConnections.start();
         receiveClientMessages.start();
     }
 
+    /**
+     * @param message the message to send
+     */
     @Override
     public void sendMessage(Message message) {
         chatFrame.addMessageToView(message);

@@ -1,4 +1,4 @@
-package com.calpayne.message;
+package com.calpayne.core.message;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,6 +9,10 @@ import com.google.gson.GsonBuilder;
  */
 public abstract class Messages {
 
+    /**
+     * @param json the JSON to get a message from
+     * @return the message from the JSON
+     */
     public static Message fromJSON(String json) {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();

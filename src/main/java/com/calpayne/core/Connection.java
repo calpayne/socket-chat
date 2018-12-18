@@ -1,6 +1,6 @@
 package com.calpayne.core;
 
-import com.calpayne.message.Message;
+import com.calpayne.core.message.Message;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

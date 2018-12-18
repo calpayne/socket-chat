@@ -2,17 +2,15 @@ package com.calpayne.core.agent;
 
 import com.calpayne.core.Connection;
 import com.calpayne.core.Settings;
-import com.calpayne.message.Message;
-import com.calpayne.message.Messages;
-import com.calpayne.message.handler.MessageHandler;
+import com.calpayne.core.message.Message;
+import com.calpayne.core.message.MessageType;
+import com.calpayne.core.message.Messages;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -32,7 +30,6 @@ public class Client extends Agent {
                 try {
                     if (server.hasMessage()) {
                         String message = server.receiveMessage();
-                        System.out.println(message);
                         queueMessage(Messages.fromJSON(message));
                     }
                 } catch (InterruptedException | IOException | ClassNotFoundException ex) {
@@ -42,29 +39,38 @@ public class Client extends Agent {
         }
     });
 
+    /**
+     * @param settings the settings to use
+     */
     public Client(Settings settings) {
         super(settings, (Agent agent, Message message) -> {
-            System.out.println(message);
             if (!message.getFrom().equalsIgnoreCase(settings.getHandle())) {
                 agent.addMessageToView(message);
             }
         });
-        super.startUp();
+        super.startup();
     }
 
+    /**
+     * Additional startup steps
+     */
     @Override
-    protected boolean startUpSteps() {
-        return connectTo();
+    protected void startupSteps() {
+        connectTo();
     }
 
+    /**
+     * Startup threads
+     */
     @Override
-    protected void startUpThreads() {
+    protected void startupThreads() {
         receiveServerMessages.start();
     }
 
-    private boolean connectTo() {
-        boolean success = true;
-
+    /**
+     * Connect to the server in settings
+     */
+    private void connectTo() {
         try {
             InetAddress bindAddress = InetAddress.getByName(settings.getServerIP());
             server = new Connection(new Socket(bindAddress.getHostName(), settings.getServerPort()));
@@ -73,29 +79,26 @@ public class Client extends Agent {
             Message message = new Message(settings.getHandle(), "");
             server.sendMessage(message);
         } catch (ConnectException ex) {
-            success = false;
-            System.err.println("Failed to connect to server.");
+            addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to connect to server."));
         } catch (SocketException ex) {
-            success = false;
-            System.err.println("Failed to connect to server.");
+            addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to connect to server."));
         } catch (UnknownHostException ex) {
-            success = false;
-            System.err.println("Failed to connect to server.");
+            addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to connect to server."));
         } catch (IOException ex) {
-            success = false;
-            System.err.println("Failed to connect to server.");
+            addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to connect to server."));
         }
-
-        return success;
     }
 
+    /**
+     * @param message the message to send
+     */
     @Override
     public void sendMessage(Message message) {
         chatFrame.addMessageToView(message);
         try {
             server.sendMessage(message);
         } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to send message to server."));
         }
     }
 
