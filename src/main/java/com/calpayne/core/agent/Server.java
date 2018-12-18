@@ -60,17 +60,14 @@ public class Server extends Agent {
     });
 
     public Server(Settings settings) {
-        super(settings);
-        super.startUp();
-
-        super.setMessageHandler(new MessageHandler() {
+        super(settings, new MessageHandler() {
             @Override
             public void handleMessage(Agent agent, Message message) {
                 System.out.println(message);
-                chatFrame.addMessageToView(message);
+                agent.addMessageToView(message);
             }
         });
-
+        super.startUp();
     }
 
     @Override

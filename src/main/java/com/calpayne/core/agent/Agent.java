@@ -22,11 +22,9 @@ public abstract class Agent {
     private final Thread handleMessages = new Thread(() -> {
         while (true) {
             try {
-                if (handler != null) {
-                    synchronized (queueLock) {
-                        Message newMessage = messages.take();
-                        handler.handleMessage(this, newMessage);
-                    }
+                synchronized (queueLock) {
+                    Message newMessage = messages.take();
+                    handler.handleMessage(this, newMessage);
                 }
             } catch (InterruptedException ex) {
 
@@ -34,8 +32,9 @@ public abstract class Agent {
         }
     });
 
-    public Agent(Settings settings) {
+    public Agent(Settings settings, MessageHandler handler) {
         this.settings = settings;
+        this.handler = handler;
         chatFrame = ChatFrame.getChatFrame();
         chatFrame.setAgent(this);
     }
@@ -64,6 +63,10 @@ public abstract class Agent {
 
     public String getHandle() {
         return settings.getHandle();
+    }
+    
+    public synchronized void addMessageToView(Message message) {
+        chatFrame.addMessageToView(message);
     }
 
 }
