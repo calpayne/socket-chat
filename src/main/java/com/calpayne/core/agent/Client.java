@@ -72,7 +72,6 @@ public class Client extends Agent {
             // Send handle to new server
             Message message = new Message(settings.getHandle(), "");
             server.sendMessage(message);
-            System.out.println("\033[1mConnected to:\033[0m " + settings.getServerIP());
         } catch (ConnectException ex) {
             success = false;
             System.err.println("Failed to connect to server.");

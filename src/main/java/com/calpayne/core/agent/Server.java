@@ -3,6 +3,7 @@ package com.calpayne.core.agent;
 import com.calpayne.core.Connection;
 import com.calpayne.core.Settings;
 import com.calpayne.message.Message;
+import com.calpayne.message.MessageType;
 import com.calpayne.message.Messages;
 import com.calpayne.message.handler.MessageHandler;
 import java.io.IOException;
@@ -11,8 +12,6 @@ import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -91,6 +90,7 @@ public class Server extends Agent {
 
     @Override
     public void sendMessage(Message message) {
+        chatFrame.addMessageToView(message);
         connections.values().forEach((connection) -> {
             try {
                 connection.sendMessage(message);
@@ -143,7 +143,8 @@ public class Server extends Agent {
                         synchronized (lock) {
                             // add to connections
                             connections.put(theirHandle, newConnection);
-                            System.out.println("\033[1mNew connection added:\033[0m " + theirHandle);
+                            Message announce = new Message(MessageType.SERVER, "Server", theirHandle + " has joined the chat room!");
+                            sendMessage(announce);
                         }
                     } else {
                         System.err.println("Already connected to a peer with name: '" + theirHandle + "'");

@@ -58,7 +58,6 @@ public class ChatFrame extends JFrame {
             if (agent != null) {
                 Message message = new Message(agent.getHandle(), input.getText());
                 agent.sendMessage(message);
-                addMessageToView(message);
                 input.setText("");
             }
         });
