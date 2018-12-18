@@ -144,6 +144,7 @@ public class Server extends Agent {
                         }
                     } else {
                         Message reply = new Message(MessageType.ERROR, "Server", "Could not connect because the handle '" + theirHandle + "' is already in use!");
+                        newConnection.sendMessage(reply);
                     }
 
                 } else {
