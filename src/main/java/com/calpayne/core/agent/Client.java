@@ -45,7 +45,9 @@ public class Client extends Agent {
     public Client(Settings settings) {
         super(settings, (Agent agent, Message message) -> {
             System.out.println(message);
-            agent.addMessageToView(message);
+            if (!message.getFrom().equalsIgnoreCase(settings.getHandle())) {
+                agent.addMessageToView(message);
+            }
         });
         super.startUp();
     }

@@ -61,7 +61,7 @@ public class Server extends Agent {
     public Server(Settings settings) {
         super(settings, (Agent agent, Message message) -> {
             System.out.println(message);
-            agent.addMessageToView(message);
+            agent.sendMessage(message);
         });
         super.startUp();
     }
