@@ -46,7 +46,8 @@ public class Server extends Agent {
                     connections.values().forEach((connection) -> {
                         try {
                             if (connection.hasMessage()) {
-                                queueMessage(Messages.fromJSON(connection.receiveMessage()));
+                                String message = connection.receiveMessage();
+                                queueMessage(Messages.fromJSON(message));
                             }
                         } catch (InterruptedException | IOException | ClassNotFoundException ex) {
 
