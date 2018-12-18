@@ -22,6 +22,18 @@ public class Settings {
     private String serverIP = "0.0.0.0";
     private int serverPort = 9090;
 
+    public String getHandle() {
+        return handle;
+    }
+
+    public String getServerIP() {
+        return serverIP;
+    }
+
+    public int getServerPort() {
+        return serverPort;
+    }
+
     public void config() {
         File config = new File("config.json");
         if (!config.exists()) {

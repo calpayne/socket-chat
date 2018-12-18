@@ -1,7 +1,8 @@
 package com.calpayne;
 
 import com.calpayne.core.Settings;
-import com.calpayne.gui.ChatFrame;
+import com.calpayne.core.agent.Agent;
+import com.calpayne.core.agent.Agents;
 
 /**
  *
@@ -13,8 +14,9 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Settings s = new Settings();
-        s.config();
-        ChatFrame.getChatFrame().start();
+        Settings settings = new Settings();
+        settings.config();
+
+        Agent agent = Agents.createNew(settings);
     }
 }
