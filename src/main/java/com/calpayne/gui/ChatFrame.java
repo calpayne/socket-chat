@@ -105,7 +105,7 @@ public class ChatFrame extends JFrame {
         this.setAlwaysOnTop(true);
     }
 
-    public void addMessageToView(Message message) {
+    public synchronized void addMessageToView(Message message) {
         String current = messages.getText();
         current = current.substring(0, current.indexOf("</body>"));
         current += message.toString() + "</body></html>";

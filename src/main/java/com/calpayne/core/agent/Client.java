@@ -32,6 +32,7 @@ public class Client extends Agent {
                 try {
                     if (server.hasMessage()) {
                         String message = server.receiveMessage();
+                        System.out.println(message);
                         queueMessage(Messages.fromJSON(message));
                     }
                 } catch (InterruptedException | IOException | ClassNotFoundException ex) {
@@ -48,6 +49,7 @@ public class Client extends Agent {
         super.setMessageHandler(new MessageHandler() {
             @Override
             public void handleMessage(Agent agent, Message message) {
+                System.out.println(message);
                 chatFrame.addMessageToView(message);
             }
         });

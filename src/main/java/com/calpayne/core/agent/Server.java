@@ -47,6 +47,7 @@ public class Server extends Agent {
                         try {
                             if (connection.hasMessage()) {
                                 String message = connection.receiveMessage();
+                                System.out.println(message);
                                 queueMessage(Messages.fromJSON(message));
                             }
                         } catch (InterruptedException | IOException | ClassNotFoundException ex) {
@@ -65,6 +66,7 @@ public class Server extends Agent {
         super.setMessageHandler(new MessageHandler() {
             @Override
             public void handleMessage(Agent agent, Message message) {
+                System.out.println(message);
                 chatFrame.addMessageToView(message);
             }
         });
