@@ -31,7 +31,8 @@ public class Client extends Agent {
             while (true) {
                 try {
                     if (server.hasMessage()) {
-                        queueMessage(Messages.fromJSON(server.receiveMessage()));
+                        String message = server.receiveMessage();
+                        queueMessage(Messages.fromJSON(message));
                     }
                 } catch (InterruptedException | IOException | ClassNotFoundException ex) {
 
@@ -91,6 +92,7 @@ public class Client extends Agent {
 
     @Override
     public void sendMessage(Message message) {
+        chatFrame.addMessageToView(message);
         try {
             server.sendMessage(message);
         } catch (IOException ex) {
