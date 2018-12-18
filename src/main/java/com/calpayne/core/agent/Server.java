@@ -5,7 +5,6 @@ import com.calpayne.core.Settings;
 import com.calpayne.message.Message;
 import com.calpayne.message.MessageType;
 import com.calpayne.message.Messages;
-import com.calpayne.message.handler.MessageHandler;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -144,7 +143,7 @@ public class Server extends Agent {
                             sendMessage(announce);
                         }
                     } else {
-                        System.err.println("Already connected to a peer with name: '" + theirHandle + "'");
+                        Message reply = new Message(MessageType.ERROR, "Server", "Could not connect because the handle '" + theirHandle + "' is already in use!");
                     }
 
                 } else {
