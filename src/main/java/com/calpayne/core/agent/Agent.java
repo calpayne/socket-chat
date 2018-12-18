@@ -37,6 +37,7 @@ public abstract class Agent {
     public Agent(Settings settings) {
         this.settings = settings;
         chatFrame = ChatFrame.getChatFrame();
+        chatFrame.setAgent(this);
     }
 
     public final void startUp() {
