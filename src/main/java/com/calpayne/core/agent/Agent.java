@@ -57,15 +57,13 @@ public abstract class Agent {
     }
 
     protected void queueMessage(Message message) throws InterruptedException {
-        synchronized (queueLock) {
-            messages.put(message);
-        }
+        messages.put(message);
     }
-    
+
     public abstract void sendMessage(Message message);
 
     public String getHandle() {
         return settings.getHandle();
     }
-    
+
 }
