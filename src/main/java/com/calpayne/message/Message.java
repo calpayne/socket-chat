@@ -25,4 +25,8 @@ public class Message {
         return "<div class=\"" + type.getTypeClass() + "\"><b>" + from + ":</b> " + message + "</div>\n";
     }
 
+    public String toJSON() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
