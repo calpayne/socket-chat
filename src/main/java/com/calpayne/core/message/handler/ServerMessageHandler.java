@@ -3,6 +3,7 @@ package com.calpayne.core.message.handler;
 import com.calpayne.core.agent.Agent;
 import com.calpayne.core.agent.Server;
 import com.calpayne.core.message.Message;
+import com.calpayne.core.message.MessageType;
 
 /**
  *
@@ -16,6 +17,7 @@ public class ServerMessageHandler implements MessageHandler {
         
         if (!server.getOnlineList().contains(message.getFrom())) {
             server.addClientToOnlineList(message.getFrom());
+            server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + message.getFrom() + "</b> is no longer AFK."));
         }
         
         server.addMessageToHistory(message);
