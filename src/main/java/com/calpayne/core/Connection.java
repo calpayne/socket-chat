@@ -40,14 +40,6 @@ public class Connection {
     public void sendMessage(Message message) throws IOException {
         clientPrintWriter.println(message.toJSON());
     }
-    
-    /**
-     * @param message the message to send
-     * @throws java.io.IOException
-     */
-    public void sendMessage(OnlineList message) throws IOException {
-        clientPrintWriter.println(message.toJSON());
-    }
 
     /**
      * @return the message

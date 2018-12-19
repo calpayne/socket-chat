@@ -1,7 +1,7 @@
 package com.calpayne.core.gui;
 
+import com.calpayne.core.message.types.OnlineListDataMessage;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -37,14 +37,8 @@ public class OnlineList extends JLabel {
         updateList();
     }
 
-    public void updateListFromJSON(String json) {
-        GsonBuilder builder = new GsonBuilder();
-        builder.setPrettyPrinting();
-        Gson gson = builder.create();
-
-        ArrayList<String> newOnline = gson.fromJson(json, ArrayList.class);
-
-        updateList(newOnline);
+    public void updateList(OnlineListDataMessage oldm) {
+        updateList(oldm.getOnline());
     }
 
     private void updateList() {

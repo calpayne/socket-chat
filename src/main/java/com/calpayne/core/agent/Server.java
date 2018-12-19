@@ -77,6 +77,8 @@ public class Server extends Agent {
         try {
             InetAddress bindAddress = InetAddress.getByName(settings.getServerIP());
             serverSocket = new ServerSocket(settings.getServerPort(), 0, bindAddress);
+            
+            chatFrame.addClient(settings.getHandle());
         } catch (IOException ex) {
 
         }
@@ -103,18 +105,6 @@ public class Server extends Agent {
             try {
                 value.sendMessage(message);
                 value.sendMessage(new OnlineListDataMessage(chatFrame.getOnlineList()));
-            } catch (IOException ex) {
-                chatFrame.removeClient(key);
-            }
-        });
-    }
-
-    public void sendMessage(OnlineList message) {
-        connections.entrySet().forEach((entry) -> {
-            String key = entry.getKey();
-            Connection value = entry.getValue();
-            try {
-                value.sendMessage(message);
             } catch (IOException ex) {
                 chatFrame.removeClient(key);
             }

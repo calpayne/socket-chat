@@ -13,7 +13,7 @@ public class Message {
     private String message;
 
     public Message() {
-        this(null, null);
+        this(null, null, null);
     }
 
     /**
@@ -67,6 +67,10 @@ public class Message {
     public String toJSON() {
         Gson gson = new Gson();
         return gson.toJson(this);
+    }
+    
+    public boolean isUserMessage() {
+        return true;
     }
 
 }

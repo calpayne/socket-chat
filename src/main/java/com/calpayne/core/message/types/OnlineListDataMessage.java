@@ -19,6 +19,11 @@ public class OnlineListDataMessage extends Message {
     public ArrayList<String> getOnline() {
         return online;
     }
+    
+    @Override
+    public boolean isUserMessage() {
+        return false;
+    }
 
     @Override
     public String toJSON() {

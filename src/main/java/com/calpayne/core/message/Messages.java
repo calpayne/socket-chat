@@ -1,5 +1,6 @@
 package com.calpayne.core.message;
 
+import com.calpayne.core.message.types.OnlineListDataMessage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public abstract class Messages {
         
         Message message = gson.fromJson(json, Message.class);
         
-        if (json.contains("online:") && message.getFrom() == null && message.getMessage() == null) {
-            message.setMessage(json);
+        if (json.startsWith("{\"online\":") && message.getFrom() == null) {
+            message = gson.fromJson(json, OnlineListDataMessage.class);
         }
 
         return message;

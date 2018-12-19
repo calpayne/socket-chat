@@ -2,6 +2,7 @@ package com.calpayne.core.gui;
 
 import com.calpayne.core.agent.Agent;
 import com.calpayne.core.message.Message;
+import com.calpayne.core.message.types.OnlineListDataMessage;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -135,8 +136,8 @@ public class ChatFrame extends JFrame {
         onlineList.addClient(handle);
     }
     
-    public void updateOnlineListFromJSON(String json) {
-        onlineList.updateListFromJSON(json);
+    public void updateOnlineList(OnlineListDataMessage oldm) {
+        onlineList.updateList(oldm);
     }
     
     public void removeClient(String handle) {
