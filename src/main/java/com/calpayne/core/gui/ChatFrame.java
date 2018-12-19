@@ -59,7 +59,7 @@ public class ChatFrame extends JFrame {
 
         JButton sendBtn = new JButton("Send Msg");
         sendBtn.addActionListener((ActionEvent ae) -> {
-            if (agent != null) {
+            if (agent != null && !input.getText().isEmpty()) {
                 Message message = new Message(agent.getHandle(), input.getText());
                 agent.sendMessage(message);
                 input.setText("");
