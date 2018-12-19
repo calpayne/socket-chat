@@ -21,7 +21,7 @@ public class Settings {
     private String handle = "handle";
     private String serverIP = "0.0.0.0";
     private int serverPort = 9090;
-    public static int GLOBAL_TIMEOUT_TIME = 120;
+    public static int GLOBAL_TIMEOUT_TIME = 45;
 
     /**
      * @return the handle

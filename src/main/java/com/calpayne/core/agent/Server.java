@@ -86,7 +86,7 @@ public class Server extends Agent {
                             boolean noMessage = false;
                             try {
                                 while (!value.hasMessage()) {
-                                    if (timeout == 30) {
+                                    if (timeout == Settings.GLOBAL_TIMEOUT_TIME) {
                                         noMessage = true;
                                         break;
                                     }
@@ -110,7 +110,7 @@ public class Server extends Agent {
                 }
 
                 try {
-                    Thread.sleep(30 * 1000);
+                    Thread.sleep(Settings.GLOBAL_TIMEOUT_TIME * 1000);
                 } catch (InterruptedException ex) {
 
                 }
