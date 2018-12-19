@@ -74,7 +74,7 @@ public class Server extends Agent {
                         Connection value = entry.getValue();
                         ArrayList<Message> history = messageHistory.get(key);
                         Collections.sort(history);
-                        Date lastMessageSent = history.get(0).getDate();
+                        Date lastMessageSent = history.get(history.size() - 1).getDate();
                         Date currentTime = new Date();
 
                         if (currentTime.getTime() - lastMessageSent.getTime() >= 10 * 60 * 1000) {
@@ -144,7 +144,7 @@ public class Server extends Agent {
      * @param message the message to send
      */
     @Override
-    public void sendMessage(Message message) {
+    public synchronized void sendMessage(Message message) {
         if (message.isUserMessage()) {
             chatFrame.addMessageToView(message);
         }

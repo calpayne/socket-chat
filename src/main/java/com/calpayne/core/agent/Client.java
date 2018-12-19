@@ -90,7 +90,7 @@ public class Client extends Agent {
      * @param message the message to send
      */
     @Override
-    public void sendMessage(Message message) {
+    public synchronized void sendMessage(Message message) {
         if (message.isUserMessage()) {
             chatFrame.addMessageToView(message);
         }
