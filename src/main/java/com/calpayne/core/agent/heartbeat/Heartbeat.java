@@ -11,11 +11,11 @@ import java.util.logging.Logger;
  *
  * @author Cal Payne
  */
-public class HeartbeatSender implements Runnable {
+public class Heartbeat implements Runnable {
 
     private final Agent agent;
 
-    public HeartbeatSender(Agent agent) {
+    public Heartbeat(Agent agent) {
         this.agent = agent;
     }
 
@@ -35,11 +35,14 @@ public class HeartbeatSender implements Runnable {
     }
 
     private void serverTask(Server server) {
-        server.sendMessage(new OnlineListDataMessage(server.getChatFrame().getOnlineList()));
+        OnlineListDataMessage oldm = new OnlineListDataMessage(server.getChatFrame().getOnlineList());
+        server.sendMessage(oldm);
+        server.updateOnlineList(oldm);
+
         try {
             Thread.sleep(5000);
         } catch (InterruptedException ex) {
-            Logger.getLogger(HeartbeatSender.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Heartbeat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

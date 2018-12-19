@@ -2,7 +2,6 @@ package com.calpayne.core.agent;
 
 import com.calpayne.core.Connection;
 import com.calpayne.core.Settings;
-import com.calpayne.core.agent.heartbeat.HeartbeatSender;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.Messages;
@@ -40,8 +39,6 @@ public class Client extends Agent {
             }
         }
     });
-    
-    private final Thread sendHeartbeat = new Thread(new HeartbeatSender(this));
 
     /**
      * @param settings the settings to use
@@ -65,7 +62,6 @@ public class Client extends Agent {
     @Override
     protected void startupThreads() {
         receiveServerMessages.start();
-        sendHeartbeat.start();
     }
 
     /**
@@ -98,7 +94,7 @@ public class Client extends Agent {
         if (message.isUserMessage()) {
             chatFrame.addMessageToView(message);
         }
-        
+
         try {
             server.sendMessage(message);
         } catch (IOException ex) {
