@@ -20,6 +20,7 @@ public class Connection {
     private final InputStreamReader clientSocketInputStreamReader;
     private final BufferedReader clientSocketBufferedReader;
     private final PrintWriter clientPrintWriter;
+    private boolean isClosed;
 
     /**
      * @param socket the socket to store and use
@@ -31,6 +32,7 @@ public class Connection {
         clientSocketInputStreamReader = new InputStreamReader(clientSocketInputStream);
         clientSocketBufferedReader = new BufferedReader(clientSocketInputStreamReader);
         clientPrintWriter = new PrintWriter(this.socket.getOutputStream(), true);
+        isClosed = false;
     }
 
     /**
@@ -66,7 +68,12 @@ public class Connection {
         return socket.getInetAddress().getHostAddress().compareTo(ipAddress) == 0;
     }
 
+    public boolean isClosed() {
+        return isClosed;
+    }
+    
     public void close() throws IOException {
         socket.close();
+        isClosed = true;
     }
 }

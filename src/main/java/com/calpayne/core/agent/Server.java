@@ -76,39 +76,41 @@ public class Server extends Agent {
                         String key = entry.getKey();
                         Connection value = entry.getValue();
 
-                        try {
-                            value.sendMessage(new AreYouAliveMessage(true));
-                        } catch (IOException ex) {
-                            setUserOffline(key);
-                        }
-                        int timeout = 0;
-                        boolean noMessage = false;
-                        try {
-                            while (!value.hasMessage()) {
-                                if (timeout == Settings.GLOBAL_TIMEOUT_TIME) {
-                                    noMessage = true;
-                                    break;
-                                }
-
-                                try {
-                                    Thread.sleep(1000);
-                                    timeout++;
-                                } catch (InterruptedException ex) {
-
-                                }
+                        if (!value.isClosed()) {
+                            try {
+                                value.sendMessage(new AreYouAliveMessage(true));
+                            } catch (IOException ex) {
+                                setUserOffline(key);
                             }
-                        } catch (IOException ex) {
-                            setUserOffline(key);
-                        }
+                            int timeout = 0;
+                            boolean noMessage = false;
+                            try {
+                                while (!value.hasMessage()) {
+                                    if (timeout == 30) {
+                                        noMessage = true;
+                                        break;
+                                    }
 
-                        if (noMessage) {
-                            setUserOffline(key);
+                                    try {
+                                        Thread.sleep(1000);
+                                        timeout++;
+                                    } catch (InterruptedException ex) {
+
+                                    }
+                                }
+                            } catch (IOException ex) {
+                                setUserOffline(key);
+                            }
+
+                            if (noMessage) {
+                                setUserOffline(key);
+                            }
                         }
                     });
                 }
 
                 try {
-                    Thread.sleep(15 * 60 * 1000);
+                    Thread.sleep(30 * 1000);
                 } catch (InterruptedException ex) {
 
                 }
@@ -277,10 +279,22 @@ public class Server extends Agent {
                 if (!noMessage) {
                     String receivedMessage = newConnection.receiveMessage();
                     Message message = Messages.fromJSON(receivedMessage);
+                    boolean doAdd = false;
 
                     // assuming first message is the handle it wants
                     String theirHandle = message.getFrom();
-                    if (!connections.containsKey(theirHandle) || theirHandle.equalsIgnoreCase(settings.getHandle())) {
+                    if (connections.containsKey(theirHandle) || theirHandle.equalsIgnoreCase(settings.getHandle())) {
+                        if (connections.get(theirHandle).isClosed()) {
+                            doAdd = true;
+                        } else {
+                            Message reply = new Message(MessageType.ERROR, "Server", "Could not connect because the handle '" + theirHandle + "' is already in use!");
+                            newConnection.sendMessage(reply);
+                        }
+                    } else {
+                        doAdd = true;
+                    }
+
+                    if (doAdd) {
                         synchronized (lock) {
                             // add to connections
                             connections.put(theirHandle, newConnection);
@@ -289,9 +303,6 @@ public class Server extends Agent {
                             chatFrame.addClient(theirHandle);
                             thisServer.sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));
                         }
-                    } else {
-                        Message reply = new Message(MessageType.ERROR, "Server", "Could not connect because the handle '" + theirHandle + "' is already in use!");
-                        newConnection.sendMessage(reply);
                     }
 
                 } else {
