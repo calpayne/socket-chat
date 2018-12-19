@@ -179,6 +179,7 @@ public class Server extends Agent {
         acceptConnections.start();
         receiveClientMessages.start();
         checkClientsActivity.start();
+        sendAndWaitForAliveMessages.start();
     }
 
     public void updateOnlineList(OnlineListDataMessage oldm) {
