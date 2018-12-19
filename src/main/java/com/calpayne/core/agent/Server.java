@@ -24,8 +24,7 @@ import java.util.concurrent.Executors;
 public class Server extends Agent {
 
     private final Server thisServer;
-    private final Object connectionsLock = new Object();
-    private final Object historyLock = new Object();
+    private final Object lock = new Object();
     private final ExecutorService processNewClient = Executors.newFixedThreadPool(20);
     private ServerSocket serverSocket;
     private final HashMap<String, Connection> connections = new HashMap<>();
@@ -49,7 +48,7 @@ public class Server extends Agent {
         @Override
         public void run() {
             while (true) {
-                synchronized (connectionsLock) {
+                synchronized (lock) {
                     connections.values().forEach((connection) -> {
                         try {
                             if (connection.hasMessage()) {
@@ -69,11 +68,10 @@ public class Server extends Agent {
         @Override
         public void run() {
             while (true) {
-                synchronized (connectionsLock) {
+                synchronized (lock) {
                     connections.entrySet().forEach((entry) -> {
                         String key = entry.getKey();
                         Connection value = entry.getValue();
-
                         ArrayList<Message> history = messageHistory.get(key);
                         Collections.sort(history);
                         Date lastMessageSent = history.get(0).getDate();
@@ -81,7 +79,16 @@ public class Server extends Agent {
 
                         if (currentTime.getTime() - lastMessageSent.getTime() >= 10 * 60 * 1000) {
                             chatFrame.removeClient(key);
+                            sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));
+                            sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + key + "</b> is now AFK."));
                         }
+
+                        for (Message m : history) {
+                            System.out.println("time in loop: " + m.getDate());
+                        }
+
+                        System.out.println("currentTime: " + currentTime);
+                        System.out.println("lastMessageTime: " + lastMessageSent);
                     });
                 }
 
@@ -154,7 +161,7 @@ public class Server extends Agent {
     }
 
     public void addMessageToHistory(Message message) {
-        synchronized (historyLock) {
+        synchronized (lock) {
             if (messageHistory.containsKey(message.getFrom())) {
                 messageHistory.get(message.getFrom()).add(message);
             } else {
@@ -214,11 +221,10 @@ public class Server extends Agent {
                     // assuming first message is the handle it wants
                     String theirHandle = message.getFrom();
                     if (!connections.containsKey(theirHandle) || theirHandle.equalsIgnoreCase(settings.getHandle())) {
-                        synchronized (connectionsLock) {
+                        synchronized (lock) {
                             // add to connections
                             connections.put(theirHandle, newConnection);
-                            Message announce = new Message(MessageType.SERVER, "Server", theirHandle + " has joined the chat room!");
-                            sendMessage(announce);
+                            sendMessage(new Message(MessageType.SERVER, "Server", theirHandle + " has joined the chat room!"));
 
                             chatFrame.addClient(theirHandle);
                             thisServer.sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));

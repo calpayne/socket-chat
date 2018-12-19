@@ -98,7 +98,7 @@ public class Client extends Agent {
         try {
             server.sendMessage(message);
         } catch (IOException ex) {
-            addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to send message to server."));
+            addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to send message to server (recconect to the server)."));
         }
     }
 
