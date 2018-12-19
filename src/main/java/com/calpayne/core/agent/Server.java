@@ -6,6 +6,7 @@ import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.Messages;
 import com.calpayne.core.message.handler.ServerMessageHandler;
+import com.calpayne.core.message.types.AreYouAliveMessage;
 import com.calpayne.core.message.types.OnlineListDataMessage;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -16,6 +17,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -56,6 +59,55 @@ public class Server extends Agent {
                                 queueMessage(Messages.fromJSON(message));
                             }
                         } catch (InterruptedException | IOException | ClassNotFoundException ex) {
+
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+    private final Thread sendAndWaitForAliveMessages = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                synchronized (lock) {
+                    connections.entrySet().forEach((entry) -> {
+                        String key = entry.getKey();
+                        Connection value = entry.getValue();
+
+                        try {
+                            value.sendMessage(new AreYouAliveMessage(true));
+                        } catch (IOException ex) {
+                            setUserOffline(key);
+                        }
+                        int timeout = 0;
+                        boolean noMessage = false;
+                        try {
+                            while (!value.hasMessage()) {
+                                if (timeout == Settings.GLOBAL_TIMEOUT_TIME) {
+                                    noMessage = true;
+                                    break;
+                                }
+
+                                try {
+                                    Thread.sleep(1000);
+                                    timeout++;
+                                } catch (InterruptedException ex) {
+
+                                }
+                            }
+                        } catch (IOException ex) {
+                            setUserOffline(key);
+                        }
+
+                        if (noMessage) {
+                            setUserOffline(key);
+                        }
+
+                        try {
+                            Thread.sleep(15 * 60 * 1000);
+                        } catch (InterruptedException ex) {
 
                         }
                     });
@@ -133,6 +185,18 @@ public class Server extends Agent {
         chatFrame.updateOnlineList(oldm);
     }
 
+    private void setUserOffline(String handle) {
+        try {
+            chatFrame.removeClient(handle);
+            connections.get(handle).close();
+            connections.remove(handle);
+            sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));
+            sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + handle + "</b> is now offline."));
+        } catch (IOException ex) {
+
+        }
+    }
+
     /**
      * @param message the message to send
      */
@@ -172,6 +236,7 @@ public class Server extends Agent {
 
     public void addClientToOnlineList(String handle) {
         chatFrame.addClient(handle);
+
     }
 
     private class ConnectionHandler implements Runnable {

@@ -65,4 +65,8 @@ public class Connection {
     public boolean hasIpAddress(final String ipAddress) {
         return socket.getInetAddress().getHostAddress().compareTo(ipAddress) == 0;
     }
+
+    public void close() throws IOException {
+        socket.close();
+    }
 }

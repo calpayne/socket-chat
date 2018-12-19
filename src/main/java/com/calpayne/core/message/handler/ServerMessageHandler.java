@@ -16,14 +16,16 @@ public class ServerMessageHandler implements MessageHandler {
     public void handleMessage(Agent agent, Message message) {
         Server server = (Server) agent;
 
-        if (!server.getOnlineList().contains(message.getFrom())) {
-            server.addClientToOnlineList(message.getFrom());
-            server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + message.getFrom() + "</b> is no longer AFK."));
-            server.sendMessage(new OnlineListDataMessage(server.getChatFrame().getOnlineList()));
-        }
+        if (message.isUserMessage()) {
+            if (!server.getOnlineList().contains(message.getFrom())) {
+                server.addClientToOnlineList(message.getFrom());
+                server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + message.getFrom() + "</b> is no longer AFK."));
+                server.sendMessage(new OnlineListDataMessage(server.getChatFrame().getOnlineList()));
+            }
 
-        server.addMessageToHistory(message);
-        server.sendMessage(message);
+            server.addMessageToHistory(message);
+            server.sendMessage(message);
+        }
     }
 
 }

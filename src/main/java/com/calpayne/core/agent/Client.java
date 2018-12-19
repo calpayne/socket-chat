@@ -91,10 +91,6 @@ public class Client extends Agent {
      */
     @Override
     public synchronized void sendMessage(Message message) {
-        if (message.isUserMessage()) {
-            chatFrame.addMessageToView(message);
-        }
-
         try {
             server.sendMessage(message);
         } catch (IOException ex) {
