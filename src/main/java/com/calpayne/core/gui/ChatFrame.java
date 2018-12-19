@@ -16,13 +16,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.text.DefaultCaret;
 
 /**
  *
  * @author Cal Payne
  */
 public class ChatFrame extends JFrame {
-    
+
     private static ChatFrame CHAT_FRAME;
     private Agent agent;
     private OnlineList onlineList;
@@ -34,16 +35,16 @@ public class ChatFrame extends JFrame {
     private ChatFrame(String title) {
         super(title);
         onlineList = new OnlineList();
-        
+
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
-        
+
         JPanel container2 = new JPanel();
         container2.setLayout(new GridBagLayout());
-        
+
         JTextField input = new JTextField(30);
         input.setBorder(BorderFactory.createCompoundBorder(input.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-        
+
         messages = new JTextPane();
         messages.setContentType("text/html");
         messages.setText("<html><style type=\"text/css\">\n"
@@ -55,7 +56,9 @@ public class ChatFrame extends JFrame {
                 + "</html>");
         messages.setEditable(false);
         messages.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-        
+        DefaultCaret caret = (DefaultCaret) messages.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
         JButton sendBtn = new JButton("Send Msg");
         sendBtn.addActionListener((ActionEvent ae) -> {
             if (agent != null && !input.getText().isEmpty()) {
@@ -64,27 +67,27 @@ public class ChatFrame extends JFrame {
                 input.setText("");
             }
         });
-        
+
         GridBagConstraints left = new GridBagConstraints();
         left.anchor = GridBagConstraints.LINE_START;
         left.fill = GridBagConstraints.HORIZONTAL;
         left.weightx = 512.0D;
         left.weighty = 1.0D;
-        
+
         GridBagConstraints right = new GridBagConstraints();
         right.insets = new Insets(0, 10, 0, 0);
         right.anchor = GridBagConstraints.LINE_END;
         right.fill = GridBagConstraints.NONE;
         right.weightx = 1.0D;
         right.weighty = 1.0D;
-        
+
         container2.add(input, left);
         container2.add(sendBtn, right);
-        
+
         container.add(new JScrollPane(messages), BorderLayout.CENTER);
         container.add(container2, BorderLayout.SOUTH);
         container.add(new JScrollPane(onlineList), BorderLayout.EAST);
-        
+
         this.add(container);
     }
 
@@ -102,7 +105,7 @@ public class ChatFrame extends JFrame {
         if (CHAT_FRAME == null) {
             CHAT_FRAME = new ChatFrame("Socket Chat");
         }
-        
+
         return CHAT_FRAME;
     }
 
@@ -126,21 +129,21 @@ public class ChatFrame extends JFrame {
         current += message.toString() + "</body></html>";
         messages.setText(current);
     }
-    
+
     public ArrayList<String> getOnlineList() {
         return onlineList.getOnlineList();
     }
-    
+
     public void addClient(String handle) {
         onlineList.addClient(handle);
     }
-    
+
     public void updateOnlineList(OnlineListDataMessage oldm) {
         onlineList.updateList(oldm);
     }
-    
+
     public void removeClient(String handle) {
         onlineList.removeClient(handle);
     }
-    
+
 }
