@@ -2,6 +2,7 @@ package com.calpayne.core.message;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.util.ArrayList;
 
 /**
  *
@@ -17,8 +18,14 @@ public abstract class Messages {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();
+        
+        Message message = gson.fromJson(json, Message.class);
+        
+        if (json.contains("online:") && message.getFrom() == null && message.getMessage() == null) {
+            message.setMessage(json);
+        }
 
-        return gson.fromJson(json, Message.class);
+        return message;
     }
     
     public static String addEmojis(String message) {

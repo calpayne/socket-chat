@@ -94,4 +94,8 @@ public abstract class Agent {
         chatFrame.addMessageToView(message);
     }
 
+    public ChatFrame getChatFrame() {
+        return chatFrame;
+    }
+
 }

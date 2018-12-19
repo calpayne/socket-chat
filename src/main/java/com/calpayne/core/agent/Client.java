@@ -5,6 +5,7 @@ import com.calpayne.core.Settings;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.Messages;
+import com.calpayne.core.message.handler.ClientMessageHandler;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
@@ -43,11 +44,7 @@ public class Client extends Agent {
      * @param settings the settings to use
      */
     public Client(Settings settings) {
-        super(settings, (Agent agent, Message message) -> {
-            if (!message.getFrom().equalsIgnoreCase(settings.getHandle())) {
-                agent.addMessageToView(message);
-            }
-        });
+        super(settings, new ClientMessageHandler());
         super.startup();
     }
 

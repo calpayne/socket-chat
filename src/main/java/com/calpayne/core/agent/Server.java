@@ -2,9 +2,11 @@ package com.calpayne.core.agent;
 
 import com.calpayne.core.Connection;
 import com.calpayne.core.Settings;
+import com.calpayne.core.gui.OnlineList;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.Messages;
+import com.calpayne.core.message.types.OnlineListDataMessage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -95,11 +97,26 @@ public class Server extends Agent {
     @Override
     public void sendMessage(Message message) {
         chatFrame.addMessageToView(message);
-        connections.values().forEach((connection) -> {
+        connections.entrySet().forEach((entry) -> {
+            String key = entry.getKey();
+            Connection value = entry.getValue();
             try {
-                connection.sendMessage(message);
+                value.sendMessage(message);
+                value.sendMessage(new OnlineListDataMessage(chatFrame.getOnlineList()));
             } catch (IOException ex) {
+                chatFrame.removeClient(key);
+            }
+        });
+    }
 
+    public void sendMessage(OnlineList message) {
+        connections.entrySet().forEach((entry) -> {
+            String key = entry.getKey();
+            Connection value = entry.getValue();
+            try {
+                value.sendMessage(message);
+            } catch (IOException ex) {
+                chatFrame.removeClient(key);
             }
         });
     }
@@ -149,6 +166,8 @@ public class Server extends Agent {
                             connections.put(theirHandle, newConnection);
                             Message announce = new Message(MessageType.SERVER, "Server", theirHandle + " has joined the chat room!");
                             sendMessage(announce);
+
+                            chatFrame.addClient(theirHandle);
                         }
                     } else {
                         Message reply = new Message(MessageType.ERROR, "Server", "Could not connect because the handle '" + theirHandle + "' is already in use!");

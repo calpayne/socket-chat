@@ -10,7 +10,11 @@ public class Message {
 
     private MessageType type;
     private final String from;
-    private final String message;
+    private String message;
+
+    public Message() {
+        this(null, null);
+    }
 
     /**
      * @param from the sender
@@ -36,6 +40,10 @@ public class Message {
      */
     public String getFrom() {
         return from;
+    }
+    
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     /**

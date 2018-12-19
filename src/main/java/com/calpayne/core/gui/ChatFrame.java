@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,9 +22,10 @@ import javax.swing.JTextPane;
  * @author Cal Payne
  */
 public class ChatFrame extends JFrame {
-
+    
     private static ChatFrame CHAT_FRAME;
     private Agent agent;
+    private OnlineList onlineList;
     private final JTextPane messages;
 
     /**
@@ -31,15 +33,17 @@ public class ChatFrame extends JFrame {
      */
     private ChatFrame(String title) {
         super(title);
+        onlineList = new OnlineList();
+        
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
-
+        
         JPanel container2 = new JPanel();
         container2.setLayout(new GridBagLayout());
-
+        
         JTextField input = new JTextField(30);
         input.setBorder(BorderFactory.createCompoundBorder(input.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-
+        
         messages = new JTextPane();
         messages.setContentType("text/html");
         messages.setText("<html><style type=\"text/css\">\n"
@@ -51,12 +55,7 @@ public class ChatFrame extends JFrame {
                 + "</html>");
         messages.setEditable(false);
         messages.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-
-        JLabel clients = new JLabel("<html><style type=\"text/css\">p {margin-top: 2px;font-weight: 300;} p b {color: #856404;}</style><b>Who's Online</b><br /><br /><p><img src=\"file:star.png\"><b>Callum</b></p><p>123</p></html>");
-        clients.setVerticalAlignment(JLabel.TOP);
-        clients.setVerticalTextPosition(JLabel.TOP);
-        clients.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
-
+        
         JButton sendBtn = new JButton("Send Msg");
         sendBtn.addActionListener((ActionEvent ae) -> {
             if (agent != null && !input.getText().isEmpty()) {
@@ -65,27 +64,27 @@ public class ChatFrame extends JFrame {
                 input.setText("");
             }
         });
-
+        
         GridBagConstraints left = new GridBagConstraints();
         left.anchor = GridBagConstraints.LINE_START;
         left.fill = GridBagConstraints.HORIZONTAL;
         left.weightx = 512.0D;
         left.weighty = 1.0D;
-
+        
         GridBagConstraints right = new GridBagConstraints();
         right.insets = new Insets(0, 10, 0, 0);
         right.anchor = GridBagConstraints.LINE_END;
         right.fill = GridBagConstraints.NONE;
         right.weightx = 1.0D;
         right.weighty = 1.0D;
-
+        
         container2.add(input, left);
         container2.add(sendBtn, right);
-
+        
         container.add(new JScrollPane(messages), BorderLayout.CENTER);
         container.add(container2, BorderLayout.SOUTH);
-        container.add(new JScrollPane(clients), BorderLayout.EAST);
-
+        container.add(new JScrollPane(onlineList), BorderLayout.EAST);
+        
         this.add(container);
     }
 
@@ -103,7 +102,7 @@ public class ChatFrame extends JFrame {
         if (CHAT_FRAME == null) {
             CHAT_FRAME = new ChatFrame("Socket Chat");
         }
-
+        
         return CHAT_FRAME;
     }
 
@@ -127,5 +126,21 @@ public class ChatFrame extends JFrame {
         current += message.toString() + "</body></html>";
         messages.setText(current);
     }
-
+    
+    public ArrayList<String> getOnlineList() {
+        return onlineList.getOnlineList();
+    }
+    
+    public void addClient(String handle) {
+        onlineList.addClient(handle);
+    }
+    
+    public void updateOnlineListFromJSON(String json) {
+        onlineList.updateListFromJSON(json);
+    }
+    
+    public void removeClient(String handle) {
+        onlineList.removeClient(handle);
+    }
+    
 }
