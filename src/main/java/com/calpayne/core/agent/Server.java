@@ -5,10 +5,14 @@ import com.calpayne.core.Settings;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.Messages;
+import com.calpayne.core.message.handler.ServerMessageHandler;
 import com.calpayne.core.message.types.OnlineListDataMessage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,10 +24,12 @@ import java.util.concurrent.Executors;
 public class Server extends Agent {
 
     private final Server thisServer;
-    private final Object lock = new Object();
+    private final Object connectionsLock = new Object();
+    private final Object historyLock = new Object();
     private final ExecutorService processNewClient = Executors.newFixedThreadPool(20);
     private ServerSocket serverSocket;
     private final HashMap<String, Connection> connections = new HashMap<>();
+    private final HashMap<String, ArrayList<Message>> messageHistory = new HashMap<>();
 
     private final Thread acceptConnections = new Thread(new Runnable() {
         @Override
@@ -43,7 +49,7 @@ public class Server extends Agent {
         @Override
         public void run() {
             while (true) {
-                synchronized (lock) {
+                synchronized (connectionsLock) {
                     connections.values().forEach((connection) -> {
                         try {
                             if (connection.hasMessage()) {
@@ -59,13 +65,40 @@ public class Server extends Agent {
         }
     });
 
+    private final Thread checkClientsActivity = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                synchronized (connectionsLock) {
+                    connections.entrySet().forEach((entry) -> {
+                        String key = entry.getKey();
+                        Connection value = entry.getValue();
+
+                        ArrayList<Message> history = messageHistory.get(key);
+                        Collections.sort(history);
+                        Date lastMessageSent = history.get(0).getDate();
+                        Date currentTime = new Date();
+
+                        if (currentTime.getTime() - lastMessageSent.getTime() >= 10 * 60 * 1000) {
+                            chatFrame.removeClient(key);
+                        }
+                    });
+                }
+
+                try {
+                    Thread.sleep(60 * 5 * 1000);
+                } catch (InterruptedException ex) {
+
+                }
+            }
+        }
+    });
+
     /**
      * @param settings the settings to use
      */
     public Server(Settings settings) {
-        super(settings, (Agent agent, Message message) -> {
-            agent.sendMessage(message);
-        });
+        super(settings, new ServerMessageHandler());
         super.startup();
 
         thisServer = this;
@@ -93,6 +126,7 @@ public class Server extends Agent {
     protected void startupThreads() {
         acceptConnections.start();
         receiveClientMessages.start();
+        checkClientsActivity.start();
     }
 
     public void updateOnlineList(OnlineListDataMessage oldm) {
@@ -117,6 +151,27 @@ public class Server extends Agent {
                 chatFrame.removeClient(key);
             }
         });
+    }
+
+    public void addMessageToHistory(Message message) {
+        synchronized (historyLock) {
+            if (messageHistory.containsKey(message.getFrom())) {
+                messageHistory.get(message.getFrom()).add(message);
+            } else {
+                ArrayList<Message> temp = new ArrayList();
+                temp.add(message);
+
+                messageHistory.put(message.getFrom(), temp);
+            }
+        }
+    }
+
+    public ArrayList<String> getOnlineList() {
+        return chatFrame.getOnlineList();
+    }
+
+    public void addClientToOnlineList(String handle) {
+        chatFrame.addClient(handle);
     }
 
     private class ConnectionHandler implements Runnable {
@@ -159,7 +214,7 @@ public class Server extends Agent {
                     // assuming first message is the handle it wants
                     String theirHandle = message.getFrom();
                     if (!connections.containsKey(theirHandle) || theirHandle.equalsIgnoreCase(settings.getHandle())) {
-                        synchronized (lock) {
+                        synchronized (connectionsLock) {
                             // add to connections
                             connections.put(theirHandle, newConnection);
                             Message announce = new Message(MessageType.SERVER, "Server", theirHandle + " has joined the chat room!");

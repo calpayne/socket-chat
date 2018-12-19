@@ -1,14 +1,16 @@
 package com.calpayne.core.message;
 
 import com.google.gson.Gson;
+import java.util.Date;
 
 /**
  *
  * @author Cal Payne
  */
-public class Message {
+public class Message implements Comparable<Message> {
 
     private MessageType type;
+    private final Date date = new Date();
     private final String from;
     private String message;
 
@@ -35,13 +37,17 @@ public class Message {
         this.message = message;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
     /**
      * @return the sender
      */
     public String getFrom() {
         return from;
     }
-    
+
     public void setMessage(String message) {
         this.message = message;
     }
@@ -68,9 +74,14 @@ public class Message {
         Gson gson = new Gson();
         return gson.toJson(this);
     }
-    
+
     public boolean isUserMessage() {
         return true;
+    }
+
+    @Override
+    public int compareTo(Message m) {
+        return this.date.compareTo(m.date);
     }
 
 }
