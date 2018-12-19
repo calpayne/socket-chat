@@ -77,7 +77,7 @@ public class Server extends Agent {
                         Date lastMessageSent = history.get(history.size() - 1).getDate();
                         Date currentTime = new Date();
 
-                        if (currentTime.getTime() - lastMessageSent.getTime() >= 1 * 60 * 1000) {
+                        if (currentTime.getTime() - lastMessageSent.getTime() >= 15 * 60 * 1000) {
                             chatFrame.removeClient(key);
                             sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));
                             sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + key + "</b> is now AFK."));
