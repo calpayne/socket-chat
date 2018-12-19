@@ -104,13 +104,13 @@ public class Server extends Agent {
                         if (noMessage) {
                             setUserOffline(key);
                         }
-
-                        try {
-                            Thread.sleep(15 * 60 * 1000);
-                        } catch (InterruptedException ex) {
-
-                        }
                     });
+                }
+
+                try {
+                    Thread.sleep(15 * 60 * 1000);
+                } catch (InterruptedException ex) {
+
                 }
             }
         }
@@ -190,7 +190,8 @@ public class Server extends Agent {
         try {
             chatFrame.removeClient(handle);
             connections.get(handle).close();
-            connections.remove(handle);
+            // causes a java.util.ConcurrentModificationException
+            //connections.remove(handle);
             sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));
             sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + handle + "</b> is now offline."));
         } catch (IOException ex) {
