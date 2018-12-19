@@ -2,11 +2,10 @@ package com.calpayne.core.agent;
 
 import com.calpayne.core.Connection;
 import com.calpayne.core.Settings;
-import com.calpayne.core.gui.OnlineList;
+import com.calpayne.core.agent.heartbeat.HeartbeatSender;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.Messages;
-import com.calpayne.core.message.types.OnlineListDataMessage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -19,12 +18,12 @@ import java.util.concurrent.Executors;
  * @author Cal Payne
  */
 public class Server extends Agent {
-
+    
     private final Object lock = new Object();
     private final ExecutorService processNewClient = Executors.newFixedThreadPool(20);
     private ServerSocket serverSocket;
     private final HashMap<String, Connection> connections = new HashMap<>();
-
+    
     private final Thread acceptConnections = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -33,12 +32,12 @@ public class Server extends Agent {
                     // Send new connection to pool to be processed
                     processNewClient.execute(new ConnectionHandler(new Connection(serverSocket.accept())));
                 } catch (IOException ex) {
-
+                    
                 }
             }
         }
     });
-
+    
     private final Thread receiveClientMessages = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -51,13 +50,15 @@ public class Server extends Agent {
                                 queueMessage(Messages.fromJSON(message));
                             }
                         } catch (InterruptedException | IOException | ClassNotFoundException ex) {
-
+                            
                         }
                     });
                 }
             }
         }
     });
+    
+    private final Thread sendHeartbeat = new Thread(new HeartbeatSender(this));
 
     /**
      * @param settings the settings to use
@@ -80,7 +81,7 @@ public class Server extends Agent {
             
             chatFrame.addClient(settings.getHandle());
         } catch (IOException ex) {
-
+            
         }
     }
 
@@ -91,6 +92,7 @@ public class Server extends Agent {
     protected void startupThreads() {
         acceptConnections.start();
         receiveClientMessages.start();
+        sendHeartbeat.start();
     }
 
     /**
@@ -98,21 +100,23 @@ public class Server extends Agent {
      */
     @Override
     public void sendMessage(Message message) {
-        chatFrame.addMessageToView(message);
+        if (message.isUserMessage()) {
+            chatFrame.addMessageToView(message);
+        }
+        
         connections.entrySet().forEach((entry) -> {
             String key = entry.getKey();
             Connection value = entry.getValue();
             try {
                 value.sendMessage(message);
-                value.sendMessage(new OnlineListDataMessage(chatFrame.getOnlineList()));
             } catch (IOException ex) {
                 chatFrame.removeClient(key);
             }
         });
     }
-
+    
     private class ConnectionHandler implements Runnable {
-
+        
         private final Connection newConnection;
 
         /**
@@ -135,42 +139,42 @@ public class Server extends Agent {
                         noMessage = true;
                         break;
                     }
-
+                    
                     try {
                         Thread.sleep(1000);
                         timeout++;
                     } catch (InterruptedException ex) {
-
+                        
                     }
                 }
-
+                
                 if (!noMessage) {
                     String receivedMessage = newConnection.receiveMessage();
                     Message message = Messages.fromJSON(receivedMessage);
 
                     // assuming first message is the handle it wants
                     String theirHandle = message.getFrom();
-                    if (!connections.containsKey(theirHandle)) {
+                    if (!connections.containsKey(theirHandle) || theirHandle.equalsIgnoreCase(settings.getHandle())) {
                         synchronized (lock) {
                             // add to connections
                             connections.put(theirHandle, newConnection);
                             Message announce = new Message(MessageType.SERVER, "Server", theirHandle + " has joined the chat room!");
                             sendMessage(announce);
-
+                            
                             chatFrame.addClient(theirHandle);
                         }
                     } else {
                         Message reply = new Message(MessageType.ERROR, "Server", "Could not connect because the handle '" + theirHandle + "' is already in use!");
                         newConnection.sendMessage(reply);
                     }
-
+                    
                 } else {
                     System.err.println("Connection with agent timed out.");
                 }
             } catch (IOException | ClassNotFoundException ex) {
-
+                
             }
         }
-
+        
     }
 }

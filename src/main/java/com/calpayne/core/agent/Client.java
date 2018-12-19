@@ -2,6 +2,7 @@ package com.calpayne.core.agent;
 
 import com.calpayne.core.Connection;
 import com.calpayne.core.Settings;
+import com.calpayne.core.agent.heartbeat.HeartbeatSender;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.Messages;
@@ -34,11 +35,13 @@ public class Client extends Agent {
                         queueMessage(Messages.fromJSON(message));
                     }
                 } catch (InterruptedException | IOException | ClassNotFoundException ex) {
-
+                    addMessageToView(new Message(MessageType.ERROR, "Server", "Lost connection to server."));
                 }
             }
         }
     });
+    
+    private final Thread sendHeartbeat = new Thread(new HeartbeatSender(this));
 
     /**
      * @param settings the settings to use
@@ -62,6 +65,7 @@ public class Client extends Agent {
     @Override
     protected void startupThreads() {
         receiveServerMessages.start();
+        sendHeartbeat.start();
     }
 
     /**
@@ -91,7 +95,10 @@ public class Client extends Agent {
      */
     @Override
     public void sendMessage(Message message) {
-        chatFrame.addMessageToView(message);
+        if (message.isUserMessage()) {
+            chatFrame.addMessageToView(message);
+        }
+        
         try {
             server.sendMessage(message);
         } catch (IOException ex) {
