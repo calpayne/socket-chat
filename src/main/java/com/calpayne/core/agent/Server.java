@@ -126,15 +126,18 @@ public class Server extends Agent {
                     connections.entrySet().forEach((entry) -> {
                         String key = entry.getKey();
                         Connection value = entry.getValue();
-                        ArrayList<Message> history = messageHistory.get(key);
-                        Collections.sort(history);
-                        Date lastMessageSent = history.get(history.size() - 1).getDate();
-                        Date currentTime = new Date();
 
-                        if (currentTime.getTime() - lastMessageSent.getTime() >= 15 * 60 * 1000) {
-                            chatFrame.removeClient(key);
-                            sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));
-                            sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + key + "</b> is now AFK."));
+                        if (!value.isClosed()) {
+                            ArrayList<Message> history = messageHistory.get(key);
+                            Collections.sort(history);
+                            Date lastMessageSent = history.get(history.size() - 1).getDate();
+                            Date currentTime = new Date();
+
+                            if (currentTime.getTime() - lastMessageSent.getTime() >= 15 * 60 * 1000) {
+                                chatFrame.removeClient(key);
+                                sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));
+                                sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + key + "</b> is now AFK."));
+                            }
                         }
                     });
                 }
