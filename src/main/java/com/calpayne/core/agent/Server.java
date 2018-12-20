@@ -12,13 +12,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,23 +22,19 @@ import java.util.logging.Logger;
  */
 public class Server extends Agent {
 
-    private final Server thisServer;
     private final Object lock = new Object();
     private final ExecutorService processNewClient = Executors.newFixedThreadPool(20);
     private ServerSocket serverSocket;
     private final HashMap<String, Connection> connections = new HashMap<>();
     private final HashMap<String, ArrayList<Message>> messageHistory = new HashMap<>();
 
-    private final Thread acceptConnections = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    // Send new connection to pool to be processed
-                    processNewClient.execute(new ConnectionHandler(new Connection(serverSocket.accept())));
-                } catch (IOException ex) {
+    private final Thread acceptConnections = new Thread(() -> {
+        while (true) {
+            try {
+                // Send new connection to pool to be processed
+                processNewClient.execute(new ConnectionHandler(new Connection(serverSocket.accept())));
+            } catch (IOException ex) {
 
-                }
             }
         }
     });
@@ -124,8 +116,6 @@ public class Server extends Agent {
     public Server(Settings settings) {
         super(settings, new ServerMessageHandler());
         super.startup();
-
-        thisServer = this;
     }
 
     /**
@@ -163,7 +153,7 @@ public class Server extends Agent {
             connections.get(handle).close();
             // causes a java.util.ConcurrentModificationException
             //connections.remove(handle);
-            sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));
+            sendMessage(new OnlineListDataMessage(getChatFrame().getOnlineList()));
             sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + handle + "</b> is now offline."));
         } catch (IOException ex) {
 
@@ -270,7 +260,7 @@ public class Server extends Agent {
                             sendMessage(new Message(MessageType.SERVER, "Server", theirHandle + " has joined the chat room!"));
 
                             chatFrame.addClient(theirHandle);
-                            thisServer.sendMessage(new OnlineListDataMessage(thisServer.getChatFrame().getOnlineList()));
+                            sendMessage(new OnlineListDataMessage(getChatFrame().getOnlineList()));
                         }
                     }
 
