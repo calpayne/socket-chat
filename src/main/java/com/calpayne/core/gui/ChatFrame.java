@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultCaret;
 
 /**
@@ -127,10 +128,12 @@ public class ChatFrame extends JFrame {
      * @param message add a message to the view
      */
     public synchronized void addMessageToView(Message message) {
-        String current = messages.getText();
-        current = current.substring(0, current.indexOf("</body>"));
-        current += message.toString() + "</body></html>";
-        messages.setText(current);
+        SwingUtilities.invokeLater(() -> {
+            String current = messages.getText();
+            current = current.substring(0, current.indexOf("</body>"));
+            current += message.toString() + "</body></html>";
+            messages.setText(current);
+        });
     }
 
     public ArrayList<String> getOnlineList() {
