@@ -65,11 +65,15 @@ public class ChatFrame extends JFrame {
         JButton sendBtn = new JButton("Send Msg");
         sendBtn.addActionListener((ActionEvent ae) -> {
             if (agent != null && !input.getText().isEmpty() && input.getText().matches("^[a-zA-Z0-9,.!?:/ ]*$")) {
-                Message message = new Message(agent.getHandle(), input.getText());
-                agent.sendMessage(message);
-                input.setText("");
+                if (input.getText().length() > 100) {
+                    addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it is longer than 100 characters."));
+                } else {
+                    Message message = new Message(agent.getHandle(), input.getText());
+                    agent.sendMessage(message);
+                    input.setText("");
+                }
             } else {
-                addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent."));
+                addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it has illegal characters."));
             }
         });
 
