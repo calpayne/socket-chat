@@ -17,7 +17,8 @@ public class ClientMessageHandler implements MessageHandler {
             if (message instanceof OnlineListDataMessage) {
                 agent.getChatFrame().updateOnlineList((OnlineListDataMessage) message);
             } else if (message instanceof AreYouAliveMessage) {
-                agent.sendMessage(message);
+                AreYouAliveMessage ayam = new AreYouAliveMessage(true);
+                agent.sendMessage(ayam);
             }
         } else if (!message.getFrom().equalsIgnoreCase(agent.getHandle())) {
             agent.addMessageToView(message);
