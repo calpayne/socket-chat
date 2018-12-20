@@ -11,7 +11,7 @@ import com.calpayne.core.message.Message;
 public class ServerMessageHandler implements MessageHandler {
 
     @Override
-    public void handleMessage(Agent agent, Message message) {
+    public synchronized void handleMessage(Agent agent, Message message) {
         Server server = (Server) agent;
 
         if (message.isUserMessage()) {

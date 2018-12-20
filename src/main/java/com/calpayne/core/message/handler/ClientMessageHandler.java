@@ -12,7 +12,7 @@ import com.calpayne.core.message.types.OnlineListDataMessage;
 public class ClientMessageHandler implements MessageHandler {
     
     @Override
-    public void handleMessage(Agent agent, Message message) {
+    public synchronized void handleMessage(Agent agent, Message message) {
         if (!message.isUserMessage()) {
             if (message instanceof OnlineListDataMessage) {
                 agent.getChatFrame().updateOnlineList((OnlineListDataMessage) message);

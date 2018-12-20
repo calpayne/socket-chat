@@ -57,8 +57,8 @@ public class ChatFrame extends JFrame {
                 + "</html>");
         messages.setEditable(false);
         messages.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-//        DefaultCaret caret = (DefaultCaret) messages.getCaret();
-//        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        DefaultCaret caret = (DefaultCaret) messages.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         JButton sendBtn = new JButton("Send Msg");
         sendBtn.addActionListener((ActionEvent ae) -> {
