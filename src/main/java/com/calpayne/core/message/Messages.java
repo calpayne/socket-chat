@@ -32,6 +32,14 @@ public abstract class Messages {
     }
     
     public static String addEmojis(String message) {
-        return message.replaceAll(":star:", "<img src=\"file:star.png\">");
+        return message.replaceAll(":star:", "<img src=\"file:emoji/star.png\">")
+                .replaceAll(":alien:", "<img src=\"file:emoji/alien.png\">")
+                .replaceAll(":banana:", "<img src=\"file:emoji/banana.png\">")
+                .replaceAll(":cheers:", "<img src=\"file:emoji/cheers.png\">")
+                .replaceAll(":disco:", "<img src=\"file:emoji/disco.png\">")
+                .replaceAll(":fire:", "<img src=\"file:emoji/fire.png\">")
+                .replaceAll(":ghost:", "<img src=\"file:emoji/ghost.png\">")
+                .replaceAll(":heart:", "<img src=\"file:emoji/heart.png\">")
+                .replaceAll(":trophy:", "<img src=\"file:emoji/trophy.png\">");
     }
 }
