@@ -29,7 +29,7 @@ public class Client extends Agent {
         public void run() {
             while (true) {
                 try {
-                    if (server.hasMessage()) {
+                    if (server != null && server.hasMessage()) {
                         String message = server.receiveMessage();
                         queueMessage(Messages.fromJSON(message));
                     }

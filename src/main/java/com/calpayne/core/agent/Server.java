@@ -132,7 +132,7 @@ public class Server extends Agent {
 
             chatFrame.addClient(settings.getHandle());
         } catch (IOException ex) {
-
+            
         }
     }
 
@@ -182,7 +182,11 @@ public class Server extends Agent {
                     } else if (message.getTo().equalsIgnoreCase(settings.getHandle())) {
                         chatFrame.addMessageToView(message);
                     } else {
-                        connections.get(message.getFrom()).sendMessage(new Message(MessageType.ERROR, "Server", "The user you're trying to message could not be found."));
+                        if (message.getFrom().equalsIgnoreCase(settings.getHandle())) {
+                            chatFrame.addMessageToView(new Message(MessageType.ERROR, "Server", "The user you're trying to message could not be found."));
+                        } else {
+                            connections.get(message.getFrom()).sendMessage(new Message(MessageType.ERROR, "Server", "The user you're trying to message could not be found."));
+                        }
                     }
                 } catch (IOException ex) {
 

@@ -14,14 +14,13 @@ public class CommandMessageHandler implements MessageHandler {
     @Override
     public void handleMessage(Agent agent, Message message) {
         Server server = (Server) agent;
-        
+
         String command = message.getMessage();
         String[] args = message.getMessage().split(" ");
         if (command.contains(" ")) {
             command = message.getMessage().toLowerCase().substring(0, message.getMessage().indexOf(" "));
         }
-        
-        
+
         switch (command) {
             case "/help":
                 server.sendMessage(new Message(MessageType.SERVER, "Server", message.getFrom(), "Commands list:<br />"
@@ -41,7 +40,11 @@ public class CommandMessageHandler implements MessageHandler {
                         + ":trophy: - <b>:trophy:</b>"));
                 break;
             case "/message":
-                server.sendMessage(new Message(MessageType.WHISPER, message.getFrom(), args[1], args[2]));
+                String whipser = "";
+                for (int i = 2; i < args.length; i++) {
+                    whipser += args[i] + " ";
+                }
+                server.sendMessage(new Message(MessageType.WHISPER, message.getFrom(), args[1], whipser));
                 break;
             default:
                 System.out.println(command);

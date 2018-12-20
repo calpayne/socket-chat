@@ -73,7 +73,11 @@ public class Settings {
         }
 
         if (settings != null) {
-            this.handle = settings.handle;
+            if (settings.handle.length() > 15) {
+                this.handle = settings.handle.substring(0, 15);
+            } else {
+                this.handle = settings.handle;
+            }
             this.serverIP = settings.serverIP;
             this.serverPort = settings.serverPort;
         } else {
