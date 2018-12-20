@@ -52,6 +52,7 @@ public class ChatFrame extends JFrame {
         messages.setText("<html><style type=\"text/css\">\n"
                 + ".nm {padding: 10px;margin-top: 5px;color: #004085; background-color: #cce5ff; border: 1px solid #b8daff;}\n"
                 + ".sm {padding: 10px;margin-top: 5px;color: #856404;background-color: #fff3cd;border: 1px solid #ffeeba;}\n"
+                + ".wm {padding: 10px;margin-top: 5px;color: #155724;background-color: #d4edda;border: 1px solid #c3e6cb;}\n"
                 + ".em {padding: 10px;margin-top: 5px;color: #721c24;background-color: #f8d7da;border: 1px solid #f5c6cb;}\n"
                 + "</style>\n"
                 + "<div class=\"sm\"><b>Server:</b> Welcome to the chat! Type <b>/help</b> for help</div>\n"

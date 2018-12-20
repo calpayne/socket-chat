@@ -7,6 +7,7 @@ package com.calpayne.core.message;
 public enum MessageType {
     NORMAL("nm"),
     SERVER("sm"),
+    WHISPER("wm"),
     ERROR("em");
 
     private final String typeClass;

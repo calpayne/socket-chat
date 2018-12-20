@@ -14,6 +14,7 @@ public class Message implements Comparable<Message> {
     private final String from;
     private final String to;
     private String message;
+    private boolean onlyFirstEmoji;
 
     public Message() {
         this(null, null, null);
@@ -37,6 +38,7 @@ public class Message implements Comparable<Message> {
         this.from = from;
         to = null;
         this.message = message;
+        onlyFirstEmoji = false;
     }
 
     /**
@@ -50,6 +52,11 @@ public class Message implements Comparable<Message> {
         this.from = from;
         this.to = to;
         this.message = message;
+        onlyFirstEmoji = false;
+    }
+    
+    public void setOnlyFirstEmoji(boolean onlyFirstEmoji) {
+        this.onlyFirstEmoji = onlyFirstEmoji;
     }
 
     public Date getDate() {
@@ -86,7 +93,7 @@ public class Message implements Comparable<Message> {
      */
     @Override
     public String toString() {
-        return "<div class=\"" + type.getTypeClass() + "\"><b>" + from + ":</b> " + Messages.addEmojis(message) + "</div>\n";
+        return "<div class=\"" + type.getTypeClass() + "\"><b>" + from + ":</b> " + Messages.addEmojis(message, onlyFirstEmoji) + "</div>\n";
     }
 
     /**
