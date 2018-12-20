@@ -171,10 +171,16 @@ public class Server extends Agent {
         boolean send = true;
 
         if (message.isUserMessage()) {
+            if (message.getTo() == null || message.getTo().isEmpty()) {
+                chatFrame.addMessageToView(message);
+            }
+
             if (message.getTo() != null && !message.getTo().isEmpty()) {
                 try {
                     if (connections.containsKey(message.getTo())) {
                         connections.get(message.getTo()).sendMessage(message);
+                    } else if (message.getTo().equalsIgnoreCase(settings.getHandle())) {
+                        chatFrame.addMessageToView(message);
                     } else {
                         connections.get(message.getFrom()).sendMessage(new Message(MessageType.ERROR, "Server", "The user you're trying to message could not be found."));
                     }
@@ -190,8 +196,6 @@ public class Server extends Agent {
         }
 
         if (send) {
-            chatFrame.addMessageToView(message);
-
             connections.entrySet().forEach((entry) -> {
                 String key = entry.getKey();
                 Connection value = entry.getValue();
