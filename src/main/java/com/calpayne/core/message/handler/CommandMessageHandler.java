@@ -21,6 +21,18 @@ public class CommandMessageHandler implements MessageHandler {
                         + "<b>/emoji</b> - show a list of all emojis<br />"
                         + "<b>/message <handle> <message></b> - send a private message"));
                 break;
+            case "/emoji":
+                server.sendMessage(new Message(MessageType.SERVER, "Server", message.getFrom(), "Emoji list (remove spaces to use):<br />"
+                        + "<b>: alien :</b> - :alien:<br />"
+                        + "<b>: banana :</b> - :banana:<br />"
+                        + "<b>: cheers :</b> - :cheers:<br />"
+                        + "<b>: disco :</b> - :disco:<br />"
+                        + "<b>: fire :</b> - :fire:<br />"
+                        + "<b>: ghost :</b> - :ghost:<br />"
+                        + "<b>: heart :</b> - :heart:<br />"
+                        + "<b>: star :</b> - :star:<br />"
+                        + "<b>: trophy :</b> - :trophy:"));
+                break;
             default:
                 server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "Your command is not recognised! Type <b>/help</b> for a list of commands!"));
         }
