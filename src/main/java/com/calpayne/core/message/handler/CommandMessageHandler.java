@@ -26,7 +26,7 @@ public class CommandMessageHandler implements MessageHandler {
             case "/help":
                 server.sendMessage(new Message(MessageType.SERVER, "Server", message.getFrom(), "Commands list:<br />"
                         + "<b>/emoji</b> - show a list of all emojis<br />"
-                        + "<b>/message <handle> <message></b> - send a private message"));
+                        + "<b>/message handle message</b> - send a private message"));
                 break;
             case "/emoji":
                 server.sendMessage(new Message(MessageType.SERVER, "Server", message.getFrom(), "Emoji list:<br />"
@@ -41,9 +41,10 @@ public class CommandMessageHandler implements MessageHandler {
                         + ":trophy: - <b>:trophy:</b>"));
                 break;
             case "/message":
-                server.sendMessage(new Message(MessageType.WHISPER, message.getFrom(), args[1], message.getMessage()));
-                
+                server.sendMessage(new Message(MessageType.WHISPER, message.getFrom(), args[1], args[2]));
+                break;
             default:
+                System.out.println(command);
                 server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "Your command is not recognised! Type <b>/help</b> for a list of commands!"));
         }
     }
