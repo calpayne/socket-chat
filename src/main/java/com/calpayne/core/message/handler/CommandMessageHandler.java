@@ -17,14 +17,15 @@ public class CommandMessageHandler implements MessageHandler {
 
         switch (message.getMessage().toLowerCase()) {
             case "/help":
-                server.sendMessage(new Message(MessageType.SERVER, "Server", "<b>/emoji</b> - show a list of all emojis<br />"
+                server.sendMessage(new Message(MessageType.SERVER, "Server", message.getFrom(), "Commands list:<br />"
+                        + "<b>/emoji</b> - show a list of all emojis<br />"
                         + "<b>/message <handle> <message></b> - send a private message"));
                 break;
             default:
-                server.sendMessage(new Message(MessageType.ERROR, "Server", "Your command is not recognised!"));
+                server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "Your command is not recognised! Type <b>/help</b> for a list of commands!"));
         }
     }
-    
+
     public static boolean messageIsCommand(Message message) {
         return message.getMessage().startsWith("/");
     }

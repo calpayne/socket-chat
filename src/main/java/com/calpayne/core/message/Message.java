@@ -12,6 +12,7 @@ public class Message implements Comparable<Message> {
     private MessageType type;
     private final Date date = new Date();
     private final String from;
+    private final String to;
     private String message;
 
     public Message() {
@@ -34,6 +35,20 @@ public class Message implements Comparable<Message> {
     public Message(MessageType type, String from, String message) {
         this.type = type;
         this.from = from;
+        to = null;
+        this.message = message;
+    }
+
+    /**
+     * @param type the type
+     * @param from the sender
+     * @param to the receiver
+     * @param message the message
+     */
+    public Message(MessageType type, String from, String to, String message) {
+        this.type = type;
+        this.from = from;
+        this.to = to;
         this.message = message;
     }
 
@@ -46,6 +61,13 @@ public class Message implements Comparable<Message> {
      */
     public String getFrom() {
         return from;
+    }
+
+    /**
+     * @return the receiver
+     */
+    public String getTo() {
+        return to;
     }
 
     public void setMessage(String message) {

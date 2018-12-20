@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -169,9 +171,18 @@ public class Server extends Agent {
         boolean send = true;
 
         if (message.isUserMessage()) {
-            chatFrame.addMessageToView(message);
+            if (message.getTo() != null && !message.getTo().isEmpty()) {
+                try {
+                    if (connections.containsKey(message.getTo())) {
+                        connections.get(message.getTo()).sendMessage(message);
+                    } else {
+                        connections.get(message.getFrom()).sendMessage(new Message(MessageType.ERROR, "Server", "The user you're trying to message could not be found."));
+                    }
+                } catch (IOException ex) {
 
-            if (CommandMessageHandler.messageIsCommand(message)) {
+                }
+                send = false;
+            } else if (CommandMessageHandler.messageIsCommand(message)) {
                 CommandMessageHandler cmh = new CommandMessageHandler();
                 cmh.handleMessage(this, message);
                 send = false;
@@ -179,6 +190,8 @@ public class Server extends Agent {
         }
 
         if (send) {
+            chatFrame.addMessageToView(message);
+
             connections.entrySet().forEach((entry) -> {
                 String key = entry.getKey();
                 Connection value = entry.getValue();
