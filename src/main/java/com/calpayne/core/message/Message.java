@@ -37,7 +37,8 @@ public class Message implements Comparable<Message> {
         this.type = type;
         this.from = from;
         to = null;
-        this.message = message.replaceAll("............", "$0<wbr>");
+        this.message = message;
+        //this.message = message.replaceAll("............", "$0<wbr>");
         onlyFirstEmoji = false;
     }
 
@@ -51,10 +52,11 @@ public class Message implements Comparable<Message> {
         this.type = type;
         this.from = from;
         this.to = to;
-        this.message = message.replaceAll("............", "$0<wbr>");
+        this.message = message;
+        //this.message = message.replaceAll("............", "$0<wbr>");
         onlyFirstEmoji = false;
     }
-    
+
     public void setOnlyFirstEmoji(boolean onlyFirstEmoji) {
         this.onlyFirstEmoji = onlyFirstEmoji;
     }
@@ -78,7 +80,8 @@ public class Message implements Comparable<Message> {
     }
 
     public void setMessage(String message) {
-        this.message = message.replaceAll("............", "$0<wbr>");
+        this.message = message;
+        //this.message = message.replaceAll("............", "$0<wbr>");
     }
 
     /**
