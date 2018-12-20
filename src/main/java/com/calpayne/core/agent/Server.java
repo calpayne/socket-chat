@@ -5,6 +5,7 @@ import com.calpayne.core.Settings;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.Messages;
+import com.calpayne.core.message.handler.CommandMessageHandler;
 import com.calpayne.core.message.handler.ServerMessageHandler;
 import com.calpayne.core.message.types.AreYouAliveMessage;
 import com.calpayne.core.message.types.OnlineListDataMessage;
@@ -165,19 +166,29 @@ public class Server extends Agent {
      */
     @Override
     public synchronized void sendMessage(Message message) {
+        boolean send = true;
+
         if (message.isUserMessage()) {
             chatFrame.addMessageToView(message);
+
+            if (CommandMessageHandler.messageIsCommand(message)) {
+                CommandMessageHandler cmh = new CommandMessageHandler();
+                cmh.handleMessage(this, message);
+                send = false;
+            }
         }
 
-        connections.entrySet().forEach((entry) -> {
-            String key = entry.getKey();
-            Connection value = entry.getValue();
-            try {
-                value.sendMessage(message);
-            } catch (IOException ex) {
-                chatFrame.removeClient(key);
-            }
-        });
+        if (send) {
+            connections.entrySet().forEach((entry) -> {
+                String key = entry.getKey();
+                Connection value = entry.getValue();
+                try {
+                    value.sendMessage(message);
+                } catch (IOException ex) {
+                    chatFrame.removeClient(key);
+                }
+            });
+        }
     }
 
     public void addMessageToHistory(Message message) {

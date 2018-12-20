@@ -19,7 +19,7 @@ public class ClientMessageHandler implements MessageHandler {
             } else if (message instanceof AreYouAliveMessage) {
                 agent.sendMessage(message);
             }
-        } else {
+        } else if (!message.getFrom().equalsIgnoreCase(agent.getHandle())) {
             agent.addMessageToView(message);
         }
     }
