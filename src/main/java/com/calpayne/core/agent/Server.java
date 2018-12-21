@@ -211,7 +211,7 @@ public class Server extends Agent {
             });
         }
     }
-    
+
     public boolean hasClient(String handle) {
         return connections.containsKey(handle);
     }
@@ -278,7 +278,10 @@ public class Server extends Agent {
 
                     // assuming first message is the handle it wants
                     String theirHandle = message.getFrom();
-                    if (connections.containsKey(theirHandle) || theirHandle.equalsIgnoreCase(settings.getHandle())) {
+                    if (theirHandle.isEmpty() && !theirHandle.matches("^[a-zA-Z0-9 ]*$")) {
+                        Message reply = new Message(MessageType.ERROR, "Server", "Please only use letters and numbers in your name!");
+                        newConnection.sendMessage(reply);
+                    } else if (connections.containsKey(theirHandle) || theirHandle.equalsIgnoreCase(settings.getHandle())) {
                         if (connections.get(theirHandle).isClosed()) {
                             doAdd = true;
                         } else {
