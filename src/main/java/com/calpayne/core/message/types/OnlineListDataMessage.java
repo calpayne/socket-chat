@@ -4,7 +4,6 @@ import com.calpayne.core.Nametag;
 import com.calpayne.core.message.Message;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  *
@@ -12,13 +11,13 @@ import java.util.HashMap;
  */
 public class OnlineListDataMessage extends Message {
 
-    private final HashMap<String, Nametag> online;
+    private final ArrayList<Nametag> online;
 
-    public OnlineListDataMessage(HashMap<String, Nametag> online) {
+    public OnlineListDataMessage(ArrayList<Nametag> online) {
         this.online = online;
     }
     
-    public HashMap<String, Nametag> getOnline() {
+    public ArrayList<Nametag> getOnline() {
         return online;
     }
     

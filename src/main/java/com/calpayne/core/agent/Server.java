@@ -132,7 +132,7 @@ public class Server extends Agent {
 
             chatFrame.addClient(new Nametag(settings.getHandle(), Rank.SERVER));
         } catch (IOException ex) {
-            
+
         }
     }
 
@@ -225,7 +225,7 @@ public class Server extends Agent {
         }
     }
 
-    public HashMap<String, Nametag> getOnlineList() {
+    public ArrayList<Nametag> getOnlineList() {
         return chatFrame.getOnlineList();
     }
 

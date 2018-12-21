@@ -143,7 +143,7 @@ public class ChatFrame extends JFrame {
         });
     }
 
-    public HashMap<String, Nametag> getOnlineList() {
+    public ArrayList<Nametag> getOnlineList() {
         return onlineList.getOnlineList();
     }
 
