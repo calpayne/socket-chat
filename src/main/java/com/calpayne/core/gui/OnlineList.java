@@ -1,6 +1,7 @@
 package com.calpayne.core.gui;
 
 import com.calpayne.core.Nametag;
+import com.calpayne.core.Rank;
 import com.calpayne.core.message.types.OnlineListDataMessage;
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -31,6 +32,15 @@ public class OnlineList extends JLabel {
 
     public ArrayList<Nametag> getOnlineList() {
         return online;
+    }
+    
+    public void setRank(String handle, Rank rank) {
+        for (Nametag nt : online) {
+            if (nt.getHandle().equalsIgnoreCase(handle)) {
+                nt.setRank(rank);
+                break;
+            }
+        }
     }
 
     public void addClient(Nametag nametag) {

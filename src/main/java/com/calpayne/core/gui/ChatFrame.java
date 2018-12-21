@@ -1,6 +1,7 @@
 package com.calpayne.core.gui;
 
 import com.calpayne.core.Nametag;
+import com.calpayne.core.Rank;
 import com.calpayne.core.agent.Agent;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
@@ -140,6 +141,10 @@ public class ChatFrame extends JFrame {
             current += message.toString() + "</body></html>";
             messages.setText(current);
         });
+    }
+    
+    public void setRank(String handle, Rank rank) {
+        onlineList.setRank(handle, rank);
     }
 
     public ArrayList<Nametag> getOnlineList() {
