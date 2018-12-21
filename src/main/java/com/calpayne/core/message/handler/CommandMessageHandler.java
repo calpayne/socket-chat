@@ -6,6 +6,7 @@ import com.calpayne.core.agent.Server;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.types.OnlineListDataMessage;
+import java.util.Random;
 
 /**
  *
@@ -28,6 +29,7 @@ public class CommandMessageHandler implements MessageHandler {
                 server.sendMessage(new Message(MessageType.SERVER, "Server", message.getFrom(), "Commands list:<br />"
                         + "<b>/emoji</b> - show a list of all emojis<br />"
                         + "<b>/message handle message</b> - send a private message<br />"
+                        + "<b>/coinflip</b> - flip a coin<br />"
                         + "<b>/makeadmin handle</b> - make someone an admin"));
                 break;
             case "/emoji":
@@ -51,6 +53,11 @@ public class CommandMessageHandler implements MessageHandler {
                 }
                 server.sendMessage(new Message(MessageType.WHISPER, message.getFrom(), args[1], whipser));
                 break;
+            case "/coinflip":
+                Random rand = new Random();
+                String coinFlip = rand.nextBoolean() ? "Heads" : "Tails";
+                server.sendMessage(new Message(MessageType.WHISPER, "Server", "<b>" + message.getFrom() + "</b> just flipped a coin and got <b>" + coinFlip + "</b>!"));
+                break;
             case "/makeadmin":
                 if (message.getFrom().equalsIgnoreCase(server.getHandle())) {
                     if (server.hasClient(args[1])) {
@@ -58,7 +65,7 @@ public class CommandMessageHandler implements MessageHandler {
                         OnlineListDataMessage oldm = new OnlineListDataMessage(server.getChatFrame().getOnlineList());
                         server.getChatFrame().updateOnlineList(oldm);
                         server.sendMessage(oldm);
-                        server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + args[1] + "</b> is now an admin :disco::disco::disco:!"));
+                        server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + args[1] + "</b> is now an admin :trophy:!"));
                     } else {
                         server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "The client couldn't be found!"));
                     }
@@ -67,7 +74,6 @@ public class CommandMessageHandler implements MessageHandler {
                 }
                 break;
             default:
-                System.out.println(command);
                 server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "Your command is not recognised! Type <b>/help</b> for a list of commands!"));
         }
     }
