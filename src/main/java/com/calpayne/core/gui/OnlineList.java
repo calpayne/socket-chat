@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
  */
 public class OnlineList extends JLabel {
 
-    private final ArrayList<Nametag> online;
+    private ArrayList<Nametag> online;
 
     public OnlineList() {
         online = new ArrayList<>();
@@ -50,14 +50,11 @@ public class OnlineList extends JLabel {
     }
 
     public void updateList(OnlineListDataMessage oldm) {
-        updateList(oldm.getOnline());
+        online = oldm.getOnline();
+        updateList();
     }
 
     private void updateList() {
-        updateList(online);
-    }
-
-    private void updateList(ArrayList<Nametag> list) {
         SwingUtilities.invokeLater(() -> {
             String textToSet = "<html><style type=\"text/css\">p {margin-top: 2px;font-weight: 300;} "
                     + ".server {color: #856404;} "
