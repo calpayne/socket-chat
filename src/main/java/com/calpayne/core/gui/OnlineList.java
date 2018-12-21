@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -57,16 +58,18 @@ public class OnlineList extends JLabel {
     }
 
     private void updateList(ArrayList<Nametag> list) {
-        String textToSet = "<html><style type=\"text/css\">p {margin-top: 2px;font-weight: 300;} "
-                + ".server {color: #856404;} "
-                + ".normal {color: #004085;} "
-                + ".admin {color: #155724;}</style>"
-                + "<b>Who's Online</b><br /><br />";
+        SwingUtilities.invokeLater(() -> {
+            String textToSet = "<html><style type=\"text/css\">p {margin-top: 2px;font-weight: 300;} "
+                    + ".server {color: #856404;} "
+                    + ".normal {color: #004085;} "
+                    + ".admin {color: #155724;}</style>"
+                    + "<b>Who's Online</b><br /><br />";
 
-        textToSet = online.stream().map((nt) -> nt.toString()).reduce(textToSet, String::concat);
+            textToSet = online.stream().map((nt) -> nt.toString()).reduce(textToSet, String::concat);
 
-        textToSet += "</html>";
-        this.setText(textToSet);
+            textToSet += "</html>";
+            this.setText(textToSet);
+        });
     }
 
     /**
