@@ -82,6 +82,21 @@ public class CommandMessageHandler implements MessageHandler {
                     server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "You do not have permission to do that!"));
                 }
                 break;
+            case "/demoteadmin":
+                if (message.getFrom().equalsIgnoreCase(server.getHandle())) {
+                    if (server.hasClient(args[1])) {
+                        server.getChatFrame().setRank(args[1], Rank.NORMAL);
+                        OnlineListDataMessage oldm = new OnlineListDataMessage(server.getChatFrame().getOnlineList());
+                        server.getChatFrame().updateOnlineList(oldm);
+                        server.sendMessage(oldm);
+                        server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + args[1] + "</b> is no longer an admin!"));
+                    } else {
+                        server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "The client couldn't be found!"));
+                    }
+                } else {
+                    server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "You do not have permission to do that!"));
+                }
+                break;
             default:
                 server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "Your command is not recognised! Type <b>/help</b> for a list of commands!"));
         }
