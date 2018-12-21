@@ -11,6 +11,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -32,6 +34,7 @@ public class ChatFrame extends JFrame {
     private Agent agent;
     private final OnlineList onlineList;
     private final JTextPane messages;
+    private final JTextField input;
 
     /**
      * @param title the title to use
@@ -46,8 +49,17 @@ public class ChatFrame extends JFrame {
         JPanel container2 = new JPanel();
         container2.setLayout(new GridBagLayout());
 
-        JTextField input = new JTextField(30);
+        input = new JTextField(30);
         input.setBorder(BorderFactory.createCompoundBorder(input.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+        input.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    sendAMessage();
+                }
+            }
+
+        });
 
         messages = new JTextPane();
         messages.setContentType("text/html");
@@ -66,17 +78,7 @@ public class ChatFrame extends JFrame {
 
         JButton sendBtn = new JButton("Send Msg");
         sendBtn.addActionListener((ActionEvent ae) -> {
-            if (agent != null && !input.getText().isEmpty() && input.getText().matches("^[a-zA-Z0-9,.!?:/ ]*$")) {
-                if (input.getText().length() > 100) {
-                    addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it is longer than 100 characters."));
-                } else {
-                    Message message = new Message(agent.getHandle(), input.getText());
-                    agent.sendMessage(message);
-                    input.setText("");
-                }
-            } else {
-                addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it has illegal characters."));
-            }
+            sendAMessage();
         });
 
         GridBagConstraints left = new GridBagConstraints();
@@ -120,6 +122,20 @@ public class ChatFrame extends JFrame {
         return CHAT_FRAME;
     }
 
+    private void sendAMessage() {
+        if (agent != null && !input.getText().isEmpty() && !input.getText().trim().isEmpty() && input.getText().matches("^[a-zA-Z0-9,.!?:/ ]*$")) {
+            if (input.getText().length() > 100) {
+                addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it is longer than 100 characters."));
+            } else {
+                Message message = new Message(agent.getHandle(), input.getText());
+                agent.sendMessage(message);
+                input.setText("");
+            }
+        } else {
+            addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it has illegal characters."));
+        }
+    }
+
     /**
      * Show the frame
      */
@@ -142,7 +158,7 @@ public class ChatFrame extends JFrame {
             messages.setText(current);
         });
     }
-    
+
     public void setRank(String handle, Rank rank) {
         onlineList.setRank(handle, rank);
     }
