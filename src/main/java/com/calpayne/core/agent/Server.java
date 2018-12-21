@@ -1,6 +1,8 @@
 package com.calpayne.core.agent;
 
 import com.calpayne.core.Connection;
+import com.calpayne.core.Nametag;
+import com.calpayne.core.Rank;
 import com.calpayne.core.Settings;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
@@ -128,7 +130,7 @@ public class Server extends Agent {
             InetAddress bindAddress = InetAddress.getByName(settings.getServerIP());
             serverSocket = new ServerSocket(settings.getServerPort(), 0, bindAddress);
 
-            chatFrame.addClient(settings.getHandle());
+            chatFrame.addClient(new Nametag(settings.getHandle(), Rank.SERVER));
         } catch (IOException ex) {
             
         }
@@ -223,12 +225,12 @@ public class Server extends Agent {
         }
     }
 
-    public ArrayList<String> getOnlineList() {
+    public HashMap<String, Nametag> getOnlineList() {
         return chatFrame.getOnlineList();
     }
 
-    public void addClientToOnlineList(String handle) {
-        chatFrame.addClient(handle);
+    public void addClientToOnlineList(Nametag nametag) {
+        chatFrame.addClient(nametag);
 
     }
 
@@ -289,7 +291,8 @@ public class Server extends Agent {
                             connections.put(theirHandle, newConnection);
                             sendMessage(new Message(MessageType.SERVER, "Server", theirHandle + " has joined the chat room!"));
 
-                            chatFrame.addClient(theirHandle);
+                            // this is where their rank would be set etc
+                            chatFrame.addClient(new Nametag(theirHandle));
                             sendMessage(new OnlineListDataMessage(getChatFrame().getOnlineList()));
                         }
                     }

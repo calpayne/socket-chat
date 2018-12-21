@@ -1,6 +1,5 @@
 package com.calpayne.core;
 
-import com.calpayne.core.gui.OnlineList;
 import com.calpayne.core.message.Message;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +19,7 @@ public class Connection {
     private final InputStreamReader clientSocketInputStreamReader;
     private final BufferedReader clientSocketBufferedReader;
     private final PrintWriter clientPrintWriter;
+    private Nametag nametag;
     private boolean isClosed;
 
     /**
@@ -68,10 +68,18 @@ public class Connection {
         return socket.getInetAddress().getHostAddress().compareTo(ipAddress) == 0;
     }
 
+    public void setNametag(Nametag nametag) {
+        this.nametag = nametag;
+    }
+
+    public String getNametag() {
+        return nametag.toString();
+    }
+
     public boolean isClosed() {
         return isClosed;
     }
-    
+
     public void close() throws IOException {
         socket.close();
         isClosed = true;

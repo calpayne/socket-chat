@@ -1,5 +1,6 @@
 package com.calpayne.core.gui;
 
+import com.calpayne.core.Nametag;
 import com.calpayne.core.agent.Agent;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
@@ -10,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -141,12 +143,12 @@ public class ChatFrame extends JFrame {
         });
     }
 
-    public ArrayList<String> getOnlineList() {
+    public HashMap<String, Nametag> getOnlineList() {
         return onlineList.getOnlineList();
     }
 
-    public void addClient(String handle) {
-        onlineList.addClient(handle);
+    public void addClient(Nametag nametag) {
+        onlineList.addClient(nametag);
     }
 
     public void updateOnlineList(OnlineListDataMessage oldm) {

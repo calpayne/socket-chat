@@ -1,8 +1,10 @@
 package com.calpayne.core.message.types;
 
+import com.calpayne.core.Nametag;
 import com.calpayne.core.message.Message;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -10,13 +12,13 @@ import java.util.ArrayList;
  */
 public class OnlineListDataMessage extends Message {
 
-    private final ArrayList<String> online;
+    private final HashMap<String, Nametag> online;
 
-    public OnlineListDataMessage(ArrayList<String> online) {
+    public OnlineListDataMessage(HashMap<String, Nametag> online) {
         this.online = online;
     }
     
-    public ArrayList<String> getOnline() {
+    public HashMap<String, Nametag> getOnline() {
         return online;
     }
     

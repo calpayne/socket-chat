@@ -1,8 +1,10 @@
 package com.calpayne.core.gui;
 
+import com.calpayne.core.Nametag;
 import com.calpayne.core.message.types.OnlineListDataMessage;
 import com.google.gson.Gson;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
@@ -12,23 +14,27 @@ import javax.swing.JLabel;
  */
 public class OnlineList extends JLabel {
 
-    private final ArrayList<String> online;
+    private final HashMap<String, Nametag> online;
 
     public OnlineList() {
-        online = new ArrayList<>();
+        online = new HashMap<>();
 
-        this.setText("<html><style type=\"text/css\">p {margin-top: 2px;font-weight: 300;} p b {color: #856404;}</style><b>Who's Online</b><br /><br /></html>");
+        this.setText("<html><style type=\"text/css\">p {margin-top: 2px;font-weight: 300;} "
+                + ".server {color: #856404;} "
+                + ".normal {color: #004085;} "
+                + ".admin {color: #155724;}</style>"
+                + "<b>Who's Online</b><br /><br /></html>");
         this.setVerticalAlignment(JLabel.TOP);
         this.setVerticalTextPosition(JLabel.TOP);
         this.setBorder(BorderFactory.createCompoundBorder(this.getBorder(), BorderFactory.createEmptyBorder(12, 12, 12, 12)));
     }
 
-    public ArrayList<String> getOnlineList() {
+    public HashMap<String, Nametag> getOnlineList() {
         return online;
     }
 
-    public void addClient(String handle) {
-        online.add(handle);
+    public void addClient(Nametag nametag) {
+        online.put(nametag.getHandle(), nametag);
         updateList();
     }
 
@@ -45,11 +51,18 @@ public class OnlineList extends JLabel {
         updateList(online);
     }
 
-    private void updateList(ArrayList<String> list) {
-        String textToSet = "<html><style type=\"text/css\">p {margin-top: 2px;font-weight: 300;} p b {color: #856404;}</style><b>Who's Online</b><br /><br />";
-        textToSet = list.stream().map((client) -> "<p>" + client + "</p>").reduce(textToSet, String::concat);
-        textToSet += "</html>";
+    private void updateList(HashMap<String, Nametag> list) {
+        String textToSet = "<html><style type=\"text/css\">p {margin-top: 2px;font-weight: 300;} "
+                + ".server {color: #856404;} "
+                + ".normal {color: #004085;} "
+                + ".admin {color: #155724;}</style>"
+                + "<b>Who's Online</b><br /><br />";
 
+        for (Map.Entry pair : online.entrySet()) {
+            textToSet += pair.getValue().toString();
+        }
+        
+        textToSet += "</html>";
         this.setText(textToSet);
     }
 
