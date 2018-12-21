@@ -57,12 +57,12 @@ public class CommandMessageHandler implements MessageHandler {
                 break;
             case "/coinflip":
                 String coinFlip = rand.nextBoolean() ? "Heads" : "Tails";
-                server.sendMessage(new Message(MessageType.WHISPER, "Server", "<b>" + message.getFrom() + "</b> just flipped a coin and got <b>" + coinFlip + "</b>!"));
+                server.sendMessage(new Message(MessageType.SERVER, "Server", "<b>" + message.getFrom() + "</b> just flipped a coin and got <b>" + coinFlip + "</b>!"));
                 break;
             case "/roll":
                 try {
                     int roll = rand.nextInt(Integer.parseInt(args[1]));
-                    server.sendMessage(new Message(MessageType.WHISPER, "Server", "<b>" + message.getFrom() + "</b> has just rolled <b>" + roll + "</b> out of <b>" + args[1] + "</b>!"));
+                    server.sendMessage(new Message(MessageType.SERVER, "Server", "<b>" + message.getFrom() + "</b> has just rolled <b>" + roll + "</b> out of <b>" + args[1] + "</b>!"));
                 } catch (NumberFormatException e) {
                     server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "You need to use a valid integer for max!"));
                 }
