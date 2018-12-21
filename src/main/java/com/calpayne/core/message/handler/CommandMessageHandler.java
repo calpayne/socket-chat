@@ -64,7 +64,7 @@ public class CommandMessageHandler implements MessageHandler {
                     int roll = rand.nextInt(Integer.parseInt(args[1]));
                     server.sendMessage(new Message(MessageType.WHISPER, "Server", "<b>" + message.getFrom() + "</b> has just rolled <b>" + roll + "</b> out of <b>" + args[1] + "</b>!"));
                 } catch (NumberFormatException e) {
-                    server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "You entered the command wrong!"));
+                    server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "You need to use a valid integer for max!"));
                 }
                 break;
             case "/makeadmin":
