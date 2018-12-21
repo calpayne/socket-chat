@@ -12,22 +12,22 @@ import com.calpayne.core.message.types.OnlineListDataMessage;
  * @author Cal Payne
  */
 public class CommandMessageHandler implements MessageHandler {
-    
+
     @Override
     public void handleMessage(Agent agent, Message message) {
         Server server = (Server) agent;
-        
+
         String command = message.getMessage();
         String[] args = message.getMessage().split(" ");
         if (command.contains(" ")) {
             command = message.getMessage().toLowerCase().substring(0, message.getMessage().indexOf(" "));
         }
-        
+
         switch (command) {
             case "/help":
                 server.sendMessage(new Message(MessageType.SERVER, "Server", message.getFrom(), "Commands list:<br />"
                         + "<b>/emoji</b> - show a list of all emojis<br />"
-                        + "<b>/message handle message</b> - send a private message"
+                        + "<b>/message handle message</b> - send a private message<br />"
                         + "<b>/makeadmin handle</b> - make someone an admin"));
                 break;
             case "/emoji":
@@ -53,8 +53,15 @@ public class CommandMessageHandler implements MessageHandler {
                 break;
             case "/makeadmin":
                 if (message.getFrom().equalsIgnoreCase(server.getHandle())) {
-                    server.getChatFrame().setRank(args[1], Rank.ADMIN);
-                    server.sendMessage(new OnlineListDataMessage(server.getChatFrame().getOnlineList()));
+                    if (server.hasClient(args[1])) {
+                        server.getChatFrame().setRank(args[1], Rank.ADMIN);
+                        OnlineListDataMessage oldm = new OnlineListDataMessage(server.getChatFrame().getOnlineList());
+                        server.getChatFrame().updateOnlineList(oldm);
+                        server.sendMessage(oldm);
+                        server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + args[1] + "</b> is now an admin :disco::disco::disco:!"));
+                    } else {
+                        server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "The client couldn't be found!"));
+                    }
                 } else {
                     server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "You do not have permission to do that!"));
                 }
@@ -64,9 +71,9 @@ public class CommandMessageHandler implements MessageHandler {
                 server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "Your command is not recognised! Type <b>/help</b> for a list of commands!"));
         }
     }
-    
+
     public static boolean messageIsCommand(Message message) {
         return message.getMessage().startsWith("/");
     }
-    
+
 }

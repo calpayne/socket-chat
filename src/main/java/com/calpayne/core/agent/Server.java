@@ -211,6 +211,10 @@ public class Server extends Agent {
             });
         }
     }
+    
+    public boolean hasClient(String handle) {
+        return connections.containsKey(handle);
+    }
 
     public void addMessageToHistory(Message message) {
         synchronized (lock) {
