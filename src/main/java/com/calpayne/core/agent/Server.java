@@ -296,7 +296,7 @@ public class Server extends Agent {
                         synchronized (lock) {
                             // add to connections
                             connections.put(theirHandle, newConnection);
-                            sendMessage(new Message(MessageType.SERVER, "Server", theirHandle + " has joined the chat room!"));
+                            sendMessage(new Message(MessageType.SERVER, "Server", "<b>" + theirHandle + "</b> has joined the chat room!"));
 
                             // this is where their rank would be set etc
                             chatFrame.addClient(new Nametag(theirHandle));
