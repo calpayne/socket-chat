@@ -134,7 +134,7 @@ public class ChatFrame extends JFrame {
             if (input.getText().length() > 100) {
                 addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it is longer than 100 characters."));
             } else {
-                if (lastSentText != null && lastSentText.equalsIgnoreCase(input.getText())) {
+                if (lastSentText != null && lastSentText.trim().equalsIgnoreCase(input.getText().trim())) {
                     addMessageToView(new Message(MessageType.ERROR, "Server", "You have already sent this message."));
                 } else {
                     Message message = new Message(agent.getHandle(), input.getText());
