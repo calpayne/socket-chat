@@ -3,6 +3,7 @@ package com.calpayne.core.agent;
 import com.calpayne.core.Settings;
 import com.calpayne.core.gui.ChatFrame;
 import com.calpayne.core.message.Message;
+import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.handler.MessageHandler;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -38,6 +39,7 @@ public abstract class Agent {
         this.handler = handler;
         chatFrame = ChatFrame.getChatFrame();
         chatFrame.setAgent(this);
+        chatFrame.addMessageToView(new Message(MessageType.SERVER, "Server", "Welcome to the chat! Type <b>/help</b> for help!"));
     }
 
     /**

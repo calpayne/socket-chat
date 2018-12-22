@@ -13,16 +13,24 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.Element;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 
 /**
  *
@@ -33,6 +41,7 @@ public class ChatFrame extends JFrame {
     private static ChatFrame CHAT_FRAME;
     private Agent agent;
     private final OnlineList onlineList;
+    private final JScrollPane messagesScrollPane;
     private final JTextPane messages;
     private final JTextField input;
 
@@ -69,12 +78,12 @@ public class ChatFrame extends JFrame {
                 + ".wm {padding: 10px;margin-top: 5px;color: #155724;background-color: #d4edda;border: 1px solid #c3e6cb;}\n"
                 + ".em {padding: 10px;margin-top: 5px;color: #721c24;background-color: #f8d7da;border: 1px solid #f5c6cb;}\n"
                 + "</style>\n"
-                + "<div class=\"sm\"><b>Server:</b> Welcome to the chat! Type <b>/help</b> for help</div>\n"
                 + "</html>");
         messages.setEditable(false);
         messages.setBorder(BorderFactory.createCompoundBorder(messages.getBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
         DefaultCaret caret = (DefaultCaret) messages.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        messagesScrollPane = new JScrollPane(messages);
 
         JButton sendBtn = new JButton("Send Msg");
         sendBtn.addActionListener((ActionEvent ae) -> {
@@ -97,7 +106,7 @@ public class ChatFrame extends JFrame {
         container2.add(input, left);
         container2.add(sendBtn, right);
 
-        container.add(new JScrollPane(messages), BorderLayout.CENTER);
+        container.add(messagesScrollPane, BorderLayout.CENTER);
         container.add(container2, BorderLayout.SOUTH);
         container.add(new JScrollPane(onlineList), BorderLayout.EAST);
 
@@ -152,10 +161,20 @@ public class ChatFrame extends JFrame {
      */
     public synchronized void addMessageToView(Message message) {
         SwingUtilities.invokeLater(() -> {
-            String current = messages.getText();
-            current = current.substring(0, current.indexOf("</body>"));
-            current += message.toString() + "</body></html>";
-            messages.setText(current);
+            try {
+                HTMLDocument doc = (HTMLDocument) messages.getStyledDocument();
+                HTMLEditorKit kit = (HTMLEditorKit) messages.getEditorKit();
+
+                kit.insertHTML(doc, doc.getLength(), message.toString(), 0, 0, null);
+
+                messages.validate();
+                messagesScrollPane.validate();
+
+                JScrollBar sb = messagesScrollPane.getVerticalScrollBar();
+                sb.setValue(sb.getMaximum());
+            } catch (IOException | BadLocationException ex) {
+
+            }
         });
     }
 
