@@ -41,6 +41,7 @@ public class ChatFrame extends JFrame {
     private final JScrollPane messagesScrollPane;
     private final JTextPane messages;
     private final JTextField input;
+    private String lastSentText;
 
     /**
      * @param title the title to use
@@ -133,12 +134,17 @@ public class ChatFrame extends JFrame {
             if (input.getText().length() > 100) {
                 addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it is longer than 100 characters."));
             } else {
-                Message message = new Message(agent.getHandle(), input.getText());
-                agent.sendMessage(message);
+                if (lastSentText != null && lastSentText.equalsIgnoreCase(input.getText())) {
+                    addMessageToView(new Message(MessageType.ERROR, "Server", "You have already sent this message."));
+                } else {
+                    Message message = new Message(agent.getHandle(), input.getText());
+                    agent.sendMessage(message);
+                }
+                lastSentText = input.getText();
                 input.setText("");
             }
         } else {
-            addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it has illegal characters."));
+            addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it has illegal characters or is empty."));
         }
     }
 
