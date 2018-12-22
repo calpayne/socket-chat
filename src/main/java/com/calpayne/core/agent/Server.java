@@ -279,8 +279,9 @@ public class Server extends Agent {
                     // assuming first message is the handle it wants
                     String theirHandle = message.getFrom();
                     if (theirHandle.isEmpty() || theirHandle.trim().isEmpty() || !theirHandle.matches("^[a-zA-Z0-9 ]*$")) {
-                        Message reply = new Message(MessageType.ERROR, "Server", "Please only use letters and numbers in your name!");
-                        newConnection.sendMessage(reply);
+                        newConnection.sendMessage(new Message(MessageType.ERROR, "Server", "Please only use letters and numbers in your name!"));
+                    } else if (theirHandle.length() > 15) {
+                        newConnection.sendMessage(new Message(MessageType.ERROR, "Server", "Please use a handle that has less than 15 characters!"));
                     } else if (connections.containsKey(theirHandle) || theirHandle.equalsIgnoreCase(settings.getHandle())) {
                         if (connections.get(theirHandle).isClosed()) {
                             doAdd = true;

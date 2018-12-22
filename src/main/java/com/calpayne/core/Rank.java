@@ -20,7 +20,7 @@ public enum Rank {
     public String getPrefixCode() {
         return prefixCode;
     }
-    
+
     public String getSuffixCode() {
         return suffixCode;
     }

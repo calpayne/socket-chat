@@ -10,7 +10,7 @@ import com.calpayne.core.message.types.OnlineListDataMessage;
  * @author Cal Payne
  */
 public class ClientMessageHandler implements MessageHandler {
-    
+
     @Override
     public synchronized void handleMessage(Agent agent, Message message) {
         if (!message.isUserMessage()) {
@@ -24,5 +24,5 @@ public class ClientMessageHandler implements MessageHandler {
             agent.addMessageToView(message);
         }
     }
-    
+
 }

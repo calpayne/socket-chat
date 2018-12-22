@@ -17,7 +17,7 @@ public class Message implements Comparable<Message> {
     private boolean onlyFirstEmoji;
 
     public Message() {
-        
+
     }
 
     /**

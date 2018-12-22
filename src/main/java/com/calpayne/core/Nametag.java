@@ -17,9 +17,13 @@ public class Nametag {
         this.handle = handle;
         this.rank = rank;
     }
-    
+
     public void setRank(Rank rank) {
         this.rank = rank;
+    }
+
+    public Rank getRank() {
+        return rank;
     }
 
     public String getHandle() {

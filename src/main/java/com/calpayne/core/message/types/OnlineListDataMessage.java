@@ -16,11 +16,11 @@ public class OnlineListDataMessage extends Message {
     public OnlineListDataMessage(ArrayList<Nametag> online) {
         this.online = online;
     }
-    
+
     public ArrayList<Nametag> getOnline() {
         return online;
     }
-    
+
     @Override
     public boolean isUserMessage() {
         return false;

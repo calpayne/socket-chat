@@ -33,7 +33,7 @@ public class OnlineList extends JLabel {
     public ArrayList<Nametag> getOnlineList() {
         return online;
     }
-    
+
     public void setRank(String handle, Rank rank) {
         for (Nametag nt : online) {
             if (nt.getHandle().equalsIgnoreCase(handle)) {
