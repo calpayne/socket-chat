@@ -39,7 +39,6 @@ public abstract class Agent {
         this.handler = handler;
         chatFrame = ChatFrame.getChatFrame();
         chatFrame.setAgent(this);
-        chatFrame.addMessageToView(new Message(MessageType.SERVER, "Server", "Welcome to the chat! Type <b>/help</b> for help!"));
     }
 
     /**
@@ -50,6 +49,7 @@ public abstract class Agent {
         startupThreads();
         handleMessages.start();
         chatFrame.start();
+        chatFrame.addMessageToView(new Message(MessageType.SERVER, "Server", "Welcome to the chat! Type <b>/help</b> for help!"));
     }
 
     /**
