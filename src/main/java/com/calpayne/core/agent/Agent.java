@@ -18,6 +18,7 @@ public abstract class Agent {
     protected final Settings settings;
     private MessageHandler handler;
     private final BlockingQueue<Message> messages = new LinkedBlockingDeque<>();
+    protected boolean isOffline = false;
 
     private final Thread handleMessages = new Thread(() -> {
         while (true) {
@@ -68,6 +69,10 @@ public abstract class Agent {
      */
     public void setMessageHandler(MessageHandler handler) {
         this.handler = handler;
+    }
+    
+    public boolean isOffline() {
+        return isOffline;
     }
 
     /**

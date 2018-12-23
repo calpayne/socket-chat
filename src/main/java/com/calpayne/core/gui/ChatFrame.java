@@ -110,7 +110,7 @@ public class ChatFrame extends JFrame {
 
         this.add(container);
     }
-    
+
     public void setGuiAlwaysOnTop(boolean guiAlwaysOnTop) {
         this.setAlwaysOnTop(guiAlwaysOnTop);
     }
@@ -134,7 +134,9 @@ public class ChatFrame extends JFrame {
     }
 
     private void sendAMessage() {
-        if (agent != null && !input.getText().isEmpty() && !input.getText().trim().isEmpty() && input.getText().matches("^[a-zA-Z0-9,.!?:/ ]*$")) {
+        if (agent.isOffline()) {
+            addMessageToView(new Message(MessageType.ERROR, "Server", "You are not connected to a server - restart the application."));
+        } else if (agent != null && !input.getText().isEmpty() && !input.getText().trim().isEmpty() && input.getText().matches("^[a-zA-Z0-9,.!?:/ ]*$")) {
             if (input.getText().length() > 100) {
                 addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it is longer than 100 characters."));
             } else {

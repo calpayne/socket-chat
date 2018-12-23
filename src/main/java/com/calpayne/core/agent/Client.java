@@ -93,6 +93,7 @@ public class Client extends Agent {
     public void closeConnection() {
         try {
             server.close();
+            isOffline = true;
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
