@@ -9,6 +9,12 @@ import com.google.gson.Gson;
  */
 public class KickedMessage extends Message {
     
+    private final boolean kicked;
+    
+    public KickedMessage() {
+        kicked = true;
+    }
+    
     @Override
     public boolean isUserMessage() {
         return false;

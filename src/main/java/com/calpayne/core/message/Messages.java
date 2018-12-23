@@ -1,6 +1,7 @@
 package com.calpayne.core.message;
 
 import com.calpayne.core.message.types.AreYouAliveMessage;
+import com.calpayne.core.message.types.KickedMessage;
 import com.calpayne.core.message.types.OnlineListDataMessage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +27,8 @@ public abstract class Messages {
             message = gson.fromJson(json, OnlineListDataMessage.class);
         } else if (json.startsWith("{\"alive\":") && message.getFrom() == null) {
             message = gson.fromJson(json, AreYouAliveMessage.class);
+        } else if (json.startsWith("{\"kicked\":") && message.getFrom() == null) {
+            message = gson.fromJson(json, KickedMessage.class);
         }
 
         return message;
