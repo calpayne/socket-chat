@@ -5,6 +5,7 @@ import com.calpayne.core.agent.Agent;
 import com.calpayne.core.agent.Server;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
+import com.calpayne.core.message.types.KickedMessage;
 import com.calpayne.core.message.types.OnlineListDataMessage;
 import java.util.Random;
 
@@ -32,7 +33,9 @@ public class CommandMessageHandler implements MessageHandler {
                         + "<b>/message handle message</b> - send a private message<br />"
                         + "<b>/coinflip</b> - flip a coin<br />"
                         + "<b>/roll max</b> - roll for a random number up to the max<br />"
-                        + "<b>/makeadmin handle</b> - make someone an admin"));
+                        + "<b>/makeadmin handle</b> - make someone an admin<br />"
+                        + "<b>/demoteadmin handle</b> - make an admin a normal user<br />"
+                        + "<b>/kick handle</b> - kick someone from the chat room"));
                 break;
             case "/emoji":
                 Message emojis = new Message(MessageType.SERVER, "Server", message.getFrom(), "Emoji list:<br />"
@@ -90,6 +93,26 @@ public class CommandMessageHandler implements MessageHandler {
                         server.getChatFrame().updateOnlineList(oldm);
                         server.sendMessage(oldm);
                         server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + args[1] + "</b> is no longer an admin!"));
+                    } else {
+                        server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "The client couldn't be found!"));
+                    }
+                } else {
+                    server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "You do not have permission to do that!"));
+                }
+                break;
+            case "/kick":
+                if (message.getFrom().equalsIgnoreCase(server.getHandle())) {
+                    if (server.hasClient(args[1])) {
+                        server.getChatFrame().removeClient(args[1]);
+                        OnlineListDataMessage oldm = new OnlineListDataMessage(server.getChatFrame().getOnlineList());
+                        server.getChatFrame().updateOnlineList(oldm);
+                        server.sendMessage(oldm);
+                        server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + args[1] + "</b> has been kicked!"));
+
+                        KickedMessage km = new KickedMessage();
+                        km.setTo(args[1]);
+                        server.sendMessage(km);
+                        server.setUserOffline(args[1]);
                     } else {
                         server.sendMessage(new Message(MessageType.ERROR, "Server", message.getFrom(), "The client couldn't be found!"));
                     }

@@ -50,7 +50,7 @@ public class Server extends Agent {
                 synchronized (lock) {
                     connections.values().forEach((connection) -> {
                         try {
-                            if (connection.hasMessage()) {
+                            if ((!connection.isClosed()) && connection.hasMessage()) {
                                 String message = connection.receiveMessage();
                                 queueMessage(Messages.fromJSON(message));
                             }
@@ -152,7 +152,7 @@ public class Server extends Agent {
         chatFrame.updateOnlineList(oldm);
     }
 
-    private void setUserOffline(String handle) {
+    public void setUserOffline(String handle) {
         try {
             chatFrame.removeClient(handle);
             connections.get(handle).close();

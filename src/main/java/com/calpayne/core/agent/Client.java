@@ -13,6 +13,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -85,6 +87,14 @@ public class Client extends Agent {
             addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to connect to server."));
         } catch (IOException ex) {
             addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to connect to server."));
+        }
+    }
+    
+    public void closeConnection() {
+        try {
+            server.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

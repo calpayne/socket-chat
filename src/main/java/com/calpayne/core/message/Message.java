@@ -71,6 +71,10 @@ public class Message implements Comparable<Message> {
     public String getFrom() {
         return from;
     }
+    
+    public void setTo(String to) {
+        this.to = to;
+    }
 
     /**
      * @return the receiver
