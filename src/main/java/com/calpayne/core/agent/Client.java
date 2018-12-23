@@ -32,7 +32,7 @@ public class Client extends Agent {
     private final Thread receiveServerMessages = new Thread(new Runnable() {
         @Override
         public void run() {
-            while (true) {
+            while (!isOffline) {
                 try {
                     if (server != null && server.hasMessage()) {
                         String message = server.receiveMessage();
@@ -91,7 +91,7 @@ public class Client extends Agent {
             addMessageToView(new Message(MessageType.ERROR, "Server", "Failed to connect to server."));
         }
     }
-    
+
     public void closeConnection() {
         try {
             server.close();
