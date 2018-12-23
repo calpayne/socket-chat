@@ -21,6 +21,7 @@ public class Settings {
     private String handle = "handle";
     private String serverIP = "0.0.0.0";
     private int serverPort = 9090;
+    private boolean guiAlwaysOnTop = true;
     public static int GLOBAL_TIMEOUT_TIME = 45;
 
     /**
@@ -42,6 +43,10 @@ public class Settings {
      */
     public int getServerPort() {
         return serverPort;
+    }
+    
+    public boolean isGuiAlwaysOnTop() {
+        return guiAlwaysOnTop;
     }
 
     /**
@@ -80,6 +85,7 @@ public class Settings {
             }
             this.serverIP = settings.serverIP;
             this.serverPort = settings.serverPort;
+            this.guiAlwaysOnTop = settings.guiAlwaysOnTop;
         } else {
             // Recreate config (assume it was broke)
             createConfig(config);

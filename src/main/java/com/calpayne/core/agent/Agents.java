@@ -12,6 +12,7 @@ public abstract class Agents {
     public static Agent createNew(Settings settings) {
         Agent agent;
         ChatFrame chatFrame = ChatFrame.getChatFrame();
+        chatFrame.setGuiAlwaysOnTop(settings.isGuiAlwaysOnTop());
 
         if (settings.getServerIP().equalsIgnoreCase("0.0.0.0")) {
             agent = new Server(settings, chatFrame);

@@ -110,6 +110,10 @@ public class ChatFrame extends JFrame {
 
         this.add(container);
     }
+    
+    public void setGuiAlwaysOnTop(boolean guiAlwaysOnTop) {
+        this.setAlwaysOnTop(guiAlwaysOnTop);
+    }
 
     /**
      * @param agent the agent to set
@@ -156,7 +160,6 @@ public class ChatFrame extends JFrame {
         this.setSize(700, 500);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-        this.setAlwaysOnTop(true);
     }
 
     /**
