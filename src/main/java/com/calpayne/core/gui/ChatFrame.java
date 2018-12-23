@@ -205,5 +205,9 @@ public class ChatFrame extends JFrame {
     public void removeClient(String handle) {
         onlineList.removeClient(handle);
     }
+    
+    public void resetList() {
+        onlineList.resetList();
+    }
 
 }

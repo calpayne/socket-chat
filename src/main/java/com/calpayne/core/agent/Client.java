@@ -1,6 +1,8 @@
 package com.calpayne.core.agent;
 
 import com.calpayne.core.Connection;
+import com.calpayne.core.Nametag;
+import com.calpayne.core.Rank;
 import com.calpayne.core.Settings;
 import com.calpayne.core.gui.ChatFrame;
 import com.calpayne.core.message.Message;
@@ -94,6 +96,8 @@ public class Client extends Agent {
         try {
             server.close();
             isOffline = true;
+            chatFrame.resetList();
+            chatFrame.addClient(new Nametag(settings.getHandle(), Rank.NORMAL));
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }

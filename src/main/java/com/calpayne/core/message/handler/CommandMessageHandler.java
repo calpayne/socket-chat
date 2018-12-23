@@ -103,10 +103,6 @@ public class CommandMessageHandler implements MessageHandler {
             case "/kick":
                 if (message.getFrom().equalsIgnoreCase(server.getHandle())) {
                     if (server.hasClient(args[1])) {
-                        server.getChatFrame().removeClient(args[1]);
-                        OnlineListDataMessage oldm = new OnlineListDataMessage(server.getChatFrame().getOnlineList());
-                        server.getChatFrame().updateOnlineList(oldm);
-                        server.sendMessage(oldm);
                         server.sendMessage(new Message(MessageType.SERVER, "Server", "The user <b>" + args[1] + "</b> has been kicked!"));
 
                         KickedMessage km = new KickedMessage();

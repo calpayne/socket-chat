@@ -58,6 +58,10 @@ public class OnlineList extends JLabel {
 
         updateList();
     }
+    
+    public void resetList() {
+        online = new ArrayList<>();
+    }
 
     public void updateList(OnlineListDataMessage oldm) {
         online = oldm.getOnline();
