@@ -4,6 +4,7 @@ import com.calpayne.core.Connection;
 import com.calpayne.core.Nametag;
 import com.calpayne.core.Rank;
 import com.calpayne.core.Settings;
+import com.calpayne.core.gui.ChatFrame;
 import com.calpayne.core.message.Message;
 import com.calpayne.core.message.MessageType;
 import com.calpayne.core.message.Messages;
@@ -115,9 +116,10 @@ public class Server extends Agent {
 
     /**
      * @param settings the settings to use
+     * @param chatFrame the chat frame to use
      */
-    public Server(Settings settings) {
-        super(settings, new ServerMessageHandler());
+    public Server(Settings settings, ChatFrame chatFrame) {
+        super(settings, chatFrame, new ServerMessageHandler());
         super.startup();
     }
 

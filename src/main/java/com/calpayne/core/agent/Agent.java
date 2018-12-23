@@ -32,12 +32,13 @@ public abstract class Agent {
 
     /**
      * @param settings the settings to use
+     * @param chatFrame the chat frame to use
      * @param handler the handler to use
      */
-    public Agent(Settings settings, MessageHandler handler) {
+    public Agent(Settings settings, ChatFrame chatFrame, MessageHandler handler) {
         this.settings = settings;
         this.handler = handler;
-        chatFrame = ChatFrame.getChatFrame();
+        this.chatFrame = chatFrame;
         chatFrame.setAgent(this);
     }
 
