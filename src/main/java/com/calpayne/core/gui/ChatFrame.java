@@ -136,21 +136,23 @@ public class ChatFrame extends JFrame {
     private void sendAMessage() {
         if (agent.isOffline()) {
             addMessageToView(new Message(MessageType.ERROR, "Server", "You are not connected to a server - restart the application."));
-        } else if (agent != null && !input.getText().isEmpty() && !input.getText().trim().isEmpty() && input.getText().matches("^[a-zA-Z0-9,.!?:/ ]*$")) {
-            if (input.getText().length() > 100) {
-                addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it is longer than 100 characters."));
-            } else {
-                if (lastSentText != null && lastSentText.trim().equalsIgnoreCase(input.getText().trim())) {
-                    addMessageToView(new Message(MessageType.ERROR, "Server", "You have already sent this message."));
-                } else {
-                    Message message = new Message(agent.getHandle(), input.getText());
-                    agent.sendMessage(message);
-                }
-                lastSentText = input.getText();
-                input.setText("");
-            }
         } else {
-            addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it has illegal characters or is empty."));
+            if (agent != null && !input.getText().isEmpty() && !input.getText().trim().isEmpty() && input.getText().matches("^[a-zA-Z0-9,.!?:/ ]*$")) {
+                if (input.getText().length() > 100) {
+                    addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it is longer than 100 characters."));
+                } else {
+                    if (lastSentText != null && lastSentText.trim().equalsIgnoreCase(input.getText().trim())) {
+                        addMessageToView(new Message(MessageType.ERROR, "Server", "You have already sent this message."));
+                    } else {
+                        Message message = new Message(agent.getHandle(), input.getText());
+                        agent.sendMessage(message);
+                    }
+                    lastSentText = input.getText();
+                    input.setText("");
+                }
+            } else {
+                addMessageToView(new Message(MessageType.ERROR, "Server", "Your message could not be sent as it has illegal characters or is empty."));
+            }
         }
     }
 
@@ -205,7 +207,7 @@ public class ChatFrame extends JFrame {
     public void removeClient(String handle) {
         onlineList.removeClient(handle);
     }
-    
+
     public void resetList() {
         onlineList.resetList();
     }
